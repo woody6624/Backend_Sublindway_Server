@@ -4,6 +4,7 @@ import SublindWay_server.Domain.User;
 import SublindWay_server.Dao.UserRepository;
 import SublindWay_server.Dto.KakaoMemberInfo;
 import SublindWay_server.Dto.OAuth2MemberInfo;
+import SublindWay_server.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.Optional;
+import java.util.jar.Attributes;
 
 
 // access token 얻은 후 실행
@@ -30,14 +32,6 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         OAuth2MemberInfo memberInfo = null;
         System.out.println(oAuth2User.getAttributes());
-
-//        String registrationId = userRequest.getClientRegistration().getRegistrationId();
-//        System.out.println("registrationId = " + registrationId);
-//        if (registrationId.equals("kakao")) {
-//            memberInfo = new KakaoMemberInfo(oAuth2User.getAttributes());
-//        } else {
-//            System.out.println("로그인 실패");
-//        }
 
         // kakao member DTO 생성
         memberInfo = new KakaoMemberInfo(oAuth2User.getAttributes());
@@ -67,6 +61,6 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
             user=findMember.get();
         }
 
-        return new PrincipalDetails(user, oAuth2User.getAttributes());
+        return new UserDetailsImpl(user, oAuth2User.getAttributes());
     }
 }
