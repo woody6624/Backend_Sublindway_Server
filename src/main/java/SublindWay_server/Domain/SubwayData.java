@@ -3,6 +3,8 @@ package SublindWay_server.Domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Getter @Setter
@@ -17,6 +19,7 @@ public class SubwayData {
 
     // 연관관계 -> 유저위치
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name="userlocation_id")
     private UserLocation userLocation;
 

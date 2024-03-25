@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface CameraCheckRepository extends JpaRepository<CameraCheckRepository,Long> {
 
-    // Query
+    // select 열 이름 from 테이블 이름 where 조건식
 }

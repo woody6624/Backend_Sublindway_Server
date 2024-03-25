@@ -19,8 +19,8 @@ public class OAuthController {
         return "userPage";
     }
 
-    @GetMapping("/oauth/kakao")
-    public @ResponseBody String kakaoCallback(String code){
-        return "카카오 서버로부터 받은 CODE 정보: "+code;
-    }
+//    @GetMapping("/oauth/kakao")
+//    public @ResponseBody String kakaoCallback(String code){
+//        return "카카오 서버로부터 받은 CODE 정보: "+code;
+//    }
 }

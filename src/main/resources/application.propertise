@@ -1,0 +1,15 @@
+#spring.application.name=MainServer
+# 카카오 클라이언트 설정
+spring.security.oauth2.client.registration.kakao.client-id=a07a421fc8114593f147dc4e129a8479
+spring.security.oauth2.client.registration.kakao.client-secret=XYox0OSj9IBnPBCGPmEX7KBHJpx4U1iL
+spring.security.oauth2.client.registration.kakao.redirect-uri=http://localhost:8080/login/oauth2/code/kakao
+spring.security.oauth2.client.registration.kakao.authorization-grant-type=authorization_code
+spring.security.oauth2.client.registration.kakao.client-authentication-method=POST
+spring.security.oauth2.client.registration.kakao.client-name=Kakao
+spring.security.oauth2.client.registration.kakao.scope=profile_nickname, profile_image, account_email
+  
+  # 카카오 프로바이더 설정
+spring.security.oauth2.client.provider.kakao.authorization-uri=https://kauth.kakao.com/oauth/authorize
+spring.security.oauth2.client.provider.kakao.token-uri=https://kauth.kakao.com/oauth/token
+spring.security.oauth2.client.provider.kakao.user-info-uri=https://kapi.kakao.com/v2/user/me
+spring.security.oauth2.client.provider.kakao.user-name-attribute=id
