@@ -5,8 +5,6 @@ pipeline {
         gradle "gradle"
     }
     environment {
-        AWS_STACK_AUTO = "${env.CLOUD_AWS_STACK_AUTO}"
-        AWS_REGION = "${env.CLOUD_AWS_REGION}"
     }
 
     stages {
@@ -29,8 +27,7 @@ pipeline {
         stage('Build And Deploy') {
             steps {
                 script {
-                echo "AWS_S3_BUCKET: ${AWS_S3_BUCKET}"
-                    sh "java -jar -DAWS_REGION=${AWS_REGION} -DAWS_STACK_AUTO=${AWS_STACK_AUTO} ./build/libs/MainServer-0.0.1-SNAPSHOT.jar"
+                    sh "java -jar  ./build/libs/MainServer-0.0.1-SNAPSHOT.jar"
                 }
             }
         }
