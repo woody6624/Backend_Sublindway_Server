@@ -4,8 +4,6 @@ pipeline {
         jdk "java"
         gradle "gradle"
     }
-    environment {
-    }
 
     stages {
         stage('Checkout') {
@@ -27,7 +25,7 @@ pipeline {
         stage('Build And Deploy') {
             steps {
                 script {
-                    sh "java -jar  ./build/libs/MainServer-0.0.1-SNAPSHOT.jar"
+                    sh "java -jar ./build/libs/MainServer-0.0.1-SNAPSHOT.jar"
                 }
             }
         }
