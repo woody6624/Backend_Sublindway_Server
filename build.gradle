@@ -27,20 +27,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2' //swagger
-
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-}
-
-// Spring Boot 애플리케이션의 메인 클래스 명시
-springBoot {
-	mainClass = 'SublindWay_server.SublindwayServerApplication' // 또는 'SublindWay_server.MainServer.MainServerApplication'
 }
 
 tasks.named('test') {
