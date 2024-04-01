@@ -15,7 +15,7 @@ public class SubwayController {
     @Autowired
     private SubwaySearchService subwaySearchService;
 
-    @GetMapping("/findSubwayByCoordinates/{locationX}/{locationY}")
+    @GetMapping("/get-subway-name")
     @ApiOperation(value = "이거에요", notes = "이겁니다")
 
     public SubwayDetailDTO findSubwayByCoordinates(@RequestParam double locationX, @RequestParam double locationY) {
