@@ -13,5 +13,7 @@ public interface SubwayDetailRepository extends JpaRepository<SubwayDetailEntity
     @Query("SELECT s FROM SubwayDetailEntity s WHERE s.subwayPositionX = :locationX AND s.subwayPositionY = :locationY")
     SubwayDetailEntity findByLocationXY(double locationX, double locationY);
 
+    @Query("SELECT s FROM SubwayDetailEntity s WHERE s.subwayLine = :subwayLine AND s.subwayName = :subwayName")
+    SubwayDetailEntity findSubwayIdBySubwayNameAndRowNum(String subwayName, int subwayLine);
 
 }

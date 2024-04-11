@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class SubwaySearchService {
-    private final SubwayDetailRepository subwayDetailRepository;
+    private SubwayDetailRepository subwayDetailRepository;
 
     @Autowired
     public SubwaySearchService(SubwayDetailRepository subwayDetailRepository) {
