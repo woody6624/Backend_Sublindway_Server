@@ -1,10 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+spring.application.name=sublindwayServer
+server.port = 8079
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.url=${MY_DB_URL}
+spring.datasource.username=${MY_DB_USERNAME}
+spring.datasource.password=${MY_DB_PASSWORD}
 
-</body>
-</html>
+spring.jpa.properties.hibernate.show_sql=true
+#sql ??? ?? ???
+spring.jpa.properties.hibernate.format_sql=true
+
+spring.jpa.hibernate.ddl-auto=update
+
+spring.jpa.database-platform=org.hibernate.dialect.MySQLDialect
+AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
+AWS_SECRET_KEY=${AWS_SECRET_KEY}
+AWS_REGION=${AWS_REGION}
+cloud.aws.s3.bucket=${AWS_S3_BUCKET}
+
+OCR_SECERET_KEY=${OCR_SECERET_KEY}
+OCR_API=${OCR_API}

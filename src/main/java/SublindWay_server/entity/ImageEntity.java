@@ -6,6 +6,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "image")
 @Getter
@@ -21,4 +25,9 @@ public class ImageEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "kakao_id")
     private UserEntity userEntity;
+
+    @Column(name="timestamp")
+    private LocalDate localDateTime;
+
+
 }
