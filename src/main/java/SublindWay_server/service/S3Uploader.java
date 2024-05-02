@@ -53,28 +53,36 @@ public class S3Uploader {
             imageEntity.setLocalDateTime(LocalDate.now());
             imageRepository.save(imageEntity);
             String uploadImageUrl = putS3(uploadFile, fileName);
-            return uploadImageUrl;
+
+        return uploadImageUrl;
     }
 
 
 
-    private File convert(MultipartFile file,String fileUUID) throws IOException {
-        String originalFileName = file.getOriginalFilename();
-        String uuid = fileUUID;
-        String uniqueFileName = uuid+".jpg";
+    private File convert(MultipartFile file, String fileUUID) throws IOException {
+        String uniqueFileName = fileUUID + ".jpg";
 
-        File convertFile = new File(uniqueFileName);
-        if (convertFile.createNewFile()) {
-            try (FileOutputStream fos = new FileOutputStream(convertFile)) {
-                fos.write(file.getBytes());
-            } catch (IOException e) {
-                log.error("파일 변환 중 오류 발생: {}", e.getMessage());
-                throw e;
-            }
-            return convertFile;
+        // 저장할 디렉토리 경로 설정 (예: 'uploads' 폴더 내부)
+        File directory = new File("uploads");
+        if (!directory.exists()) {
+            directory.mkdirs();  // 디렉토리가 없으면 생성
         }
-        throw new IllegalArgumentException(String.format("파일 변환에 실패했습니다. %s", originalFileName));
+
+        // 파일을 저장할 전체 경로 생성
+        File convertFile = new File(directory, uniqueFileName);
+        if (!convertFile.createNewFile()) {
+            log.info("File already exists: {}", convertFile.getAbsolutePath());
+        }
+
+        try (FileOutputStream fos = new FileOutputStream(convertFile)) {
+            fos.write(file.getBytes());
+        } catch (IOException e) {
+            log.error("파일 저장 중 오류 발생: {}", e.getMessage());
+            throw e;
+        }
+        return convertFile;
     }
+
 
     private String putS3(File uploadFile, String fileName) {
         amazonS3.putObject(new PutObjectRequest(bucket, fileName, uploadFile)
@@ -84,12 +92,18 @@ public class S3Uploader {
 
 
     public void removeNewFile(File targetFile) {
-        if (targetFile.delete()) {
-            log.info("파일이 삭제되었습니다.");
+        // 현재 작업 디렉토리에 기반한 'uploads' 폴더 경로 사용
+        String baseDir = System.getProperty("user.dir");
+        File fullPath = new File(baseDir + File.separator + "uploads" + File.separator + targetFile.getName());
+
+        // 파일 삭제 시도
+        if (fullPath.delete()) {
+            log.info("파일이 삭제되었습니다: {}", fullPath.getPath());
         } else {
-            log.info("파일이 삭제되지 못했습니다.");
+            log.info("파일이 삭제되지 못했습니다: {}", fullPath.getPath());
         }
     }
+
 
     public void deleteFile(String fileName) {
         try {

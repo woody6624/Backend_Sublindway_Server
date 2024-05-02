@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.UUID;
@@ -28,6 +25,10 @@ public class NaverOCRService {
 
     public String processOCR(String imageFilePath) {
         try {
+            // 현재 작업 디렉토리에 기반한 'uploads' 폴더 경로 사용
+            String baseDir = System.getProperty("user.dir");
+            String fullPath = baseDir + File.separator + "uploads" + File.separator + imageFilePath + ".jpg";
+
             // OCR 서비스 URL 설정
             URL url = new URL(ocr_api);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -47,7 +48,7 @@ public class NaverOCRService {
             image.put("format", "jpg");
 
             // 이미지 파일 읽기
-            FileInputStream inputStream = new FileInputStream(imageFilePath + ".jpg");
+            FileInputStream inputStream = new FileInputStream(fullPath);
             byte[] buffer = new byte[inputStream.available()];
             inputStream.read(buffer);
             inputStream.close();

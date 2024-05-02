@@ -3,24 +3,25 @@ package SublindWay_server.controller;
 import SublindWay_server.service.NaverOCRService;
 import SublindWay_server.service.OcrAnalyzer;
 import SublindWay_server.service.S3Uploader;
-import SublindWay_server.utility.NearbySubwayInfo;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
-@RestController(value="/image")
+@RestController(value= "/images")
 public class ImageController {
+    private final Path rootLocation = Paths.get("images");
 
     @Autowired
     S3Uploader s3Uploader;
@@ -35,7 +36,6 @@ public class ImageController {
     public ImageController(AmazonS3 amazonS3) {
         this.amazonS3 = amazonS3;
     }
-
 
     @PostMapping(value = "/send-subways-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiOperation(value = "이미지 넣기", notes = "지하철-지하철-지하철 이미지 넣기")
