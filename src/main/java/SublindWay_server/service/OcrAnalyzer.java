@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 public class OcrAnalyzer {
 
-    public List<String> getOcrSubwayNumList(String ocrResult) throws JsonProcessingException {
+    public String getOcrSubwayNumList(String ocrResult) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode getAllJsonData = objectMapper.readTree(ocrResult);
         JsonNode imageArrJsonData = getAllJsonData.get("images");
@@ -30,10 +30,49 @@ public class OcrAnalyzer {
                 }
             }
         }
-        return subwayNums;
+        if(Integer.parseInt(subwayNums.get(0))-Integer.parseInt(subwayNums.get(1))>0){
+            System.out.println("하행");
+            return "하행";
+        }
+        else if(Integer.parseInt(subwayNums.get(0))-Integer.parseInt(subwayNums.get(1))>0){
+            return "상행";
+        }
+        else{
+            return null;
+        }
     }
+
+    public List<String> getOcrSubwayRangeList(String ocrResult) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode getAllJsonData = objectMapper.readTree(ocrResult);
+        JsonNode imageArrJsonData = getAllJsonData.get("images");
+        List<String> hyphenNum = new ArrayList<>();
+        for (JsonNode imageData : imageArrJsonData) {
+            JsonNode fieldsDatas = imageData.get("fields");
+            for (JsonNode fieldData : fieldsDatas) {
+                JsonNode inferTextNode = fieldData.get("inferText");
+                if (inferTextNode != null) {
+                    String inferText = inferTextNode.asText();
+                    // 숫자-숫자 형태인 경우 추출하여 리스트에 추가
+                    if (isHyphenNumber(inferText)) {
+                        hyphenNum.add(inferText);
+                        System.out.println(inferText);
+                    }
+                }
+            }
+        }
+        return hyphenNum;
+    }
+
+
+
+
 
     private static boolean isNumber(String str) {
         return str.matches("-?\\d+(\\.\\d+)?");
     }
+    private static boolean isHyphenNumber(String str) {
+        return str.matches("-?\\d+-\\d+");
+    }
+
 }

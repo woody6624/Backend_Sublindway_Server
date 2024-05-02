@@ -19,6 +19,11 @@ public class NearbySubwayInfo {
     private String arvlMsg3;
     @JsonProperty("arvlCd")
     private String arvlCd;
+    @JsonProperty("updnLine") //상 하행 구분
+    private String updnLine;
+    @JsonProperty("btrainNo")
+    private String btrainNo;
+
 
     private int barvlDt;
 }

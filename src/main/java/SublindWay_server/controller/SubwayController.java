@@ -21,6 +21,11 @@ public class SubwayController {
     public SubwayDetailDTO findSubwayByCoordinates(@RequestParam double locationX, @RequestParam double locationY) {
         return subwaySearchService.getSubwayName(locationX, locationY);
     }
+    @GetMapping("/get-subway-name2")
+    @ApiOperation(value = "이거에요", notes = "이겁니다")
 
+    public SubwayDetailDTO findSubwayByEUclid(@RequestParam double locationX, @RequestParam double locationY) {
+        return subwaySearchService.getSubwayDetailsByLocation(locationX, locationY);
+    }
 
 }
