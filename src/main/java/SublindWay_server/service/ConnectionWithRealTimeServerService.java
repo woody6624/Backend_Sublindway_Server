@@ -149,6 +149,4 @@ public class ConnectionWithRealTimeServerService {
         Optional<TrainInfoEntity> trainInfoEntity=trainInfoRepository.findById(nearbySubwayInfo.getBtrainNo());
         return trainInfoEntity.get().getStatnNm();
     }
-
-
 }

@@ -21,8 +21,6 @@ import java.util.UUID;
 @Slf4j
 @Service
 public class S3Uploader {
-    @Resource
-    private ResourceLoader resourceLoader;
     private final AmazonS3 amazonS3;
     private final String bucket;
 
@@ -121,10 +119,5 @@ public class S3Uploader {
         deleteFile(oldFileName);
         // 새 파일 업로드
         return uploadImageFile(newFile, dirName);
-    }
-    public String getFileURL(String fileName) {
-        System.out.println("넘어오는 파일명 : "+fileName);
-        String imgName = (fileName).replace(File.separatorChar, '/');
-        return amazonS3.generatePresignedUrl(new GeneratePresignedUrlRequest(bucket, imgName)).toString();
     }
 }
