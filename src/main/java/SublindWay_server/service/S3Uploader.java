@@ -29,7 +29,7 @@ public class S3Uploader {
     private final ImageRepository imageRepository;
 
     @Autowired
-    public S3Uploader(AmazonS3 amazonS3, @Value("${cloud.aws.s3.bucket}") String bucket, ImageRepository imageRepository) {
+    public S3Uploader(AmazonS3 amazonS3, @Value("${AWS_S3_BUCKET}") String bucket, ImageRepository imageRepository) {
         this.amazonS3 = amazonS3;
         this.bucket = bucket;
 
