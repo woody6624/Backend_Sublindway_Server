@@ -30,11 +30,17 @@ public class OcrAnalyzer {
                 }
             }
         }
+        if(subwayNums.isEmpty()){
+            return "사진을 다시 찍어주세요";
+        }
+        if(subwayNums.size()<2){
+            return "최소한 2개 이상의 숫자를 찍어야합니다";
+        }
         if(Integer.parseInt(subwayNums.get(0))-Integer.parseInt(subwayNums.get(1))>0){
             System.out.println("하행");
             return "하행";
         }
-        else if(Integer.parseInt(subwayNums.get(0))-Integer.parseInt(subwayNums.get(1))>0){
+        else if(Integer.parseInt(subwayNums.get(0))-Integer.parseInt(subwayNums.get(1))<0){
             return "상행";
         }
         else{
@@ -60,6 +66,11 @@ public class OcrAnalyzer {
                     }
                 }
             }
+        }
+
+
+        if(hyphenNum.isEmpty()){
+            return null;
         }
         return hyphenNum;
     }
