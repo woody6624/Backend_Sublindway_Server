@@ -93,6 +93,7 @@ public class ConnectionWithRealTimeServerService {
                 String arvlCd = node.get("arvlCd").asText();
                 String barvlDt=node.get("barvlDt").asText();//도착 소요 시간정보(초)
                 String updnLine=node.get("updnLine").asText();//상하행
+                String btrainNo=node.get("btrainNo").asText();//열차정보
                 // 추출한 정보를 객체에 저장 또는 필요한 작업 수행
                 NearbySubwayInfo subwayInfo = new NearbySubwayInfo();
                 subwayInfo.setStatnFid(statnFid);
@@ -101,6 +102,7 @@ public class ConnectionWithRealTimeServerService {
                 subwayInfo.setArvlMsg2(arvlMsg2);
                 subwayInfo.setArvlMsg3(arvlMsg3);
                 subwayInfo.setUpdnLine(updnLine);
+                subwayInfo.setBtrainNo(btrainNo);
                 int rowNum = 0;
 
                 rowNum=checkRowNum(subwayId);//호선 체크
@@ -141,12 +143,17 @@ public class ConnectionWithRealTimeServerService {
 
 
     public String upHill(NearbySubwayInfo nearbySubwayInfo){
-        Optional<TrainInfoEntity> trainInfoEntity=trainInfoRepository.findById(nearbySubwayInfo.getBtrainNo());
-        return trainInfoEntity.get().getStatnNm();
+       // Optional<TrainInfoEntity> trainInfoEntity=trainInfoRepository.findById(nearbySubwayInfo.getBtrainNo());
+        return nearbySubwayInfo.getBtrainNo();
     }
 
     public String downHill(NearbySubwayInfo nearbySubwayInfo){
-        Optional<TrainInfoEntity> trainInfoEntity=trainInfoRepository.findById(nearbySubwayInfo.getBtrainNo());
-        return trainInfoEntity.get().getStatnNm();
+        return nearbySubwayInfo.getBtrainNo();
+    }
+
+    public String trackingTrain(String btrainNo){  //열차 추적
+        Optional<TrainInfoEntity> trainInfoEntity=trainInfoRepository.findById(btrainNo);
+        String presentStationInfo="현재 해당열차는 "+trainInfoEntity.get().getStatnNm()+"에 위치하고 있습니다";//현재 역
+        return presentStationInfo;
     }
 }

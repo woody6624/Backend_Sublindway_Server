@@ -1,5 +1,7 @@
 package SublindWay_server.controller;
 
+import SublindWay_server.entity.ImageEntity;
+import SublindWay_server.repository.ImageRepository;
 import SublindWay_server.service.NaverOCRService;
 import SublindWay_server.service.OcrAnalyzer;
 import SublindWay_server.service.S3Uploader;
@@ -25,7 +27,8 @@ public class ImageController {
 
     @Autowired
     S3Uploader s3Uploader;
-
+    @Autowired
+    private ImageRepository imageRepository;
     @Autowired
     NaverOCRService naverOCRService;
     @Autowired
@@ -39,10 +42,10 @@ public class ImageController {
 
     @PostMapping(value = "/send-subways-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiOperation(value = "이미지 넣기", notes = "지하철-지하철-지하철 이미지 넣기")
-    public String imageUploadAndCheckSubwayNum(@RequestParam("file") MultipartFile file) throws IOException {
+    public List<String> imageUploadAndCheckSubwayNum(@RequestParam("file") MultipartFile file) throws IOException {
         String s3Key = s3Uploader.uploadImageFile(file, ""); // 이미지를 업로드하고 반환된 S3 키(경로)를 얻음
         // OCR 서비스에 S3 키(경로)와 파일 스트림을 전달하여 OCR 수행
-        String answer=ocrAnalyzer.getOcrSubwayNumList(naverOCRService.processOCR(s3Key));
+        List<String> answer=ocrAnalyzer.getOcrSubwayNumList(naverOCRService.processOCR(s3Key));
         s3Uploader.removeNewFile(new File(s3Key + ".jpg"));
         return answer;
     }
@@ -57,4 +60,11 @@ public class ImageController {
         return answer;
     }
 
+    @PostMapping(value = "/find-image-uuid")
+    @ApiOperation(value = "이미지 uuid찾기", notes = "uuid찾기")
+    public String getImageUUID(@RequestParam String kakaoId) throws IOException {
+        List<ImageEntity> imageEntities=imageRepository.findByKakaoId(kakaoId);
+        return  imageEntities.get(0).getImageUUID();
+
+    }
 }

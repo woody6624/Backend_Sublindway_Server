@@ -14,9 +14,14 @@ import java.util.List;
 public class LiveServerConnectionController {
     @Autowired
     ConnectionWithRealTimeServerService connectionWithRealTimeServerSerive;
-    @GetMapping("/")
+    @GetMapping("/station-updown")
     @ApiOperation(value = "역넣기", notes = "subwayId를 넣으면 ")
     public String tests(@RequestParam String subwayId,@RequestParam String upDown){
         return connectionWithRealTimeServerSerive.connectionWithRealSubway(subwayId,upDown);
+    }
+    @GetMapping("/track-train")
+    @ApiOperation(value = "역넣기", notes = "subwayId를 넣으면 ")
+    public String trackingTrain(@RequestParam String subwayId){
+        return connectionWithRealTimeServerSerive.trackingTrain(subwayId);
     }
 }

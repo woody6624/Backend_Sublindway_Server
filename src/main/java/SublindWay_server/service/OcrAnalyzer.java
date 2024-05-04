@@ -11,11 +11,12 @@ import java.util.List;
 @Service
 public class OcrAnalyzer {
 
-    public String getOcrSubwayNumList(String ocrResult) throws JsonProcessingException {
+    public List<String> getOcrSubwayNumList(String ocrResult) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode getAllJsonData = objectMapper.readTree(ocrResult);
         JsonNode imageArrJsonData = getAllJsonData.get("images");
         List<String> subwayNums = new ArrayList<>();
+        List<String> answerList=new ArrayList<>();
         for (JsonNode imageData : imageArrJsonData) {
             JsonNode fieldsDatas = imageData.get("fields");
             for (JsonNode fieldData : fieldsDatas) {
@@ -31,17 +32,19 @@ public class OcrAnalyzer {
             }
         }
         if(subwayNums.isEmpty()){
-            return "사진을 다시 찍어주세요";
+            return getOcrSubwayRangeList(ocrResult);
         }
         if(subwayNums.size()<2){
-            return "최소한 2개 이상의 숫자를 찍어야합니다";
+            answerList.add("최소한 2개 이상의 숫자를 찍어야합니다");
+            return answerList;
         }
         if(Integer.parseInt(subwayNums.get(0))-Integer.parseInt(subwayNums.get(1))>0){
-            System.out.println("하행");
-            return "하행";
+            answerList.add("하행");
+            return answerList;
         }
         else if(Integer.parseInt(subwayNums.get(0))-Integer.parseInt(subwayNums.get(1))<0){
-            return "상행";
+            answerList.add("상행");
+            return answerList;
         }
         else{
             return null;
@@ -67,8 +70,6 @@ public class OcrAnalyzer {
                 }
             }
         }
-
-
         if(hyphenNum.isEmpty()){
             return null;
         }

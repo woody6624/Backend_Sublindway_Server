@@ -1,7 +1,9 @@
 package SublindWay_server.service;
 
 import SublindWay_server.entity.ImageEntity;
+import SublindWay_server.entity.UserEntity;
 import SublindWay_server.repository.ImageRepository;
+import SublindWay_server.repository.UserRepository;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 import jakarta.annotation.Resource;
@@ -15,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.net.URLDecoder;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -25,13 +28,15 @@ public class S3Uploader {
     private final String bucket;
 
     private final ImageRepository imageRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public S3Uploader(AmazonS3 amazonS3, @Value("${AWS_S3_BUCKET}") String bucket, ImageRepository imageRepository) {
+    public S3Uploader(AmazonS3 amazonS3, @Value("${AWS_S3_BUCKET}") String bucket, ImageRepository imageRepository, UserRepository userRepository) {
         this.amazonS3 = amazonS3;
         this.bucket = bucket;
 
         this.imageRepository = imageRepository;
+        this.userRepository = userRepository;
     }
 
     public String uploadImageFile(MultipartFile multipartFile, String dirName) throws IOException {
@@ -49,6 +54,8 @@ public class S3Uploader {
             ImageEntity imageEntity=new ImageEntity();
             imageEntity.setImageUUID(uuid);
             imageEntity.setLocalDateTime(LocalDate.now());
+            Optional<UserEntity> userEntity=userRepository.findById("test");
+            imageEntity.setUserEntity(userEntity.get());
             imageRepository.save(imageEntity);
             String uploadImageUrl = putS3(uploadFile, fileName);
 
