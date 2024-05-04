@@ -14,16 +14,8 @@ public class SubwayController {
 
     @Autowired
     private SubwaySearchService subwaySearchService;
-
-    @GetMapping("/get-subway-name")
-    @ApiOperation(value = "이거에요", notes = "이겁니다")
-
-    public SubwayDetailDTO findSubwayByCoordinates(@RequestParam double locationX, @RequestParam double locationY) {
-        return subwaySearchService.getSubwayName(locationX, locationY);
-    }
-    @GetMapping("/get-subway-name2")
-    @ApiOperation(value = "이거에요", notes = "이겁니다")
-
+    @GetMapping("/subway-name-by-location")
+    @ApiOperation(value = "지하철역 이름 얻기", notes = "본인의 xy좌표를 통하여서 근처 지하철 역의 이름을 얻을 수 있습니다.")
     public SubwayDetailDTO findSubwayByEUclid(@RequestParam double locationX, @RequestParam double locationY) {
         return subwaySearchService.getSubwayDetailsByLocation(locationX, locationY);
     }

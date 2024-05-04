@@ -50,7 +50,7 @@ public class ImageController {
         s3Uploader.removeNewFile(new File(s3Key + ".jpg"));
         return answer;
     }
-
+/*
     @PostMapping(value = "/send-board-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiOperation(value = "이미지 넣기", notes = "2-3같은 탑승구 이미지 넣기")
     public List<String> imageUploadAndCheckHyphen(@RequestParam("file") MultipartFile file) throws IOException {
@@ -60,7 +60,7 @@ public class ImageController {
         s3Uploader.removeNewFile(new File(s3Key + ".jpg"));
         return answer;
     }
-
+*/
     @GetMapping(value = "/find-image-uuid")
     @ApiOperation(value = "이미지 uuid찾기", notes = "uuid찾기")
     public String getImageUUID(@RequestParam String kakaoId) throws IOException {

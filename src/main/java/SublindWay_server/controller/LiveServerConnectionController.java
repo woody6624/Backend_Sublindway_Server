@@ -15,13 +15,13 @@ public class LiveServerConnectionController {
     @Autowired
     ConnectionWithRealTimeServerService connectionWithRealTimeServerSerive;
     @GetMapping("/station-updown")
-    @ApiOperation(value = "역넣기", notes = "subwayId를 넣으면 ")
+    @ApiOperation(value = "열차 번호 얻기", notes = "열차역 이름과 상하행 2개를 넣어서 탑승할 열차번호 얻기")
     public String tests(@RequestParam String subwayId,@RequestParam String upDown){
         return connectionWithRealTimeServerSerive.connectionWithRealSubway(subwayId,upDown);
     }
     @GetMapping("/track-train")
-    @ApiOperation(value = "역넣기", notes = "subwayId를 넣으면 ")
-    public String trackingTrain(@RequestParam String subwayId){
-        return connectionWithRealTimeServerSerive.trackingTrain(subwayId);
+    @ApiOperation(value = "열차추적", notes = "열차번호로 역이 어딘지 추적")
+    public String trackingTrain(@RequestParam String trainNumber){
+        return connectionWithRealTimeServerSerive.trackingTrain(trainNumber);
     }
 }
