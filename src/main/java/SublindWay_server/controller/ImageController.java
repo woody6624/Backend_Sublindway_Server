@@ -9,6 +9,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -60,7 +61,7 @@ public class ImageController {
         return answer;
     }
 
-    @PostMapping(value = "/find-image-uuid")
+    @GetMapping(value = "/find-image-uuid")
     @ApiOperation(value = "이미지 uuid찾기", notes = "uuid찾기")
     public String getImageUUID(@RequestParam String kakaoId) throws IOException {
         List<ImageEntity> imageEntities=imageRepository.findByKakaoId(kakaoId);
