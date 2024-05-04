@@ -7,6 +7,7 @@ import SublindWay_server.service.OcrAnalyzer;
 import SublindWay_server.service.S3Uploader;
 import com.amazonaws.services.s3.AmazonS3;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,7 +44,7 @@ public class ImageController {
 
     @PostMapping(value = "/send-subways-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ApiOperation(value = "이미지 넣기", notes = "지하철-지하철-지하철 이미지 넣기")
-    public List<String> imageUploadAndCheckSubwayNum(@RequestParam("file") MultipartFile file) throws IOException {
+    public List<String> imageUploadAndCheckSubwayNum(@ApiParam(value= "이미지 파일",required = true) @RequestParam("file") MultipartFile file) throws IOException {
         String s3Key = s3Uploader.uploadImageFile(file, ""); // 이미지를 업로드하고 반환된 S3 키(경로)를 얻음
         // OCR 서비스에 S3 키(경로)와 파일 스트림을 전달하여 OCR 수행
         List<String> answer=ocrAnalyzer.getOcrSubwayNumList(naverOCRService.processOCR(s3Key));
@@ -63,7 +64,7 @@ public class ImageController {
 */
     @GetMapping(value = "/find-image-uuid")
     @ApiOperation(value = "이미지 uuid찾기", notes = "uuid찾기")
-    public String getImageUUID(@RequestParam String kakaoId) throws IOException {
+    public String getImageUUID(@ApiParam(value= "카카오아이디로 찾기",required = true)@RequestParam String kakaoId) throws IOException {
         List<ImageEntity> imageEntities=imageRepository.findByKakaoId(kakaoId);
         return  imageEntities.get(0).getImageUUID();
 
