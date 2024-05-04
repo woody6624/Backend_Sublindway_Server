@@ -5,6 +5,8 @@ import SublindWay_server.entity.SubwayDetailEntity;
 import SublindWay_server.service.SubwaySearchService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,4 +22,10 @@ public class SubwayController {
         return subwaySearchService.getSubwayDetailsByLocation(locationX, locationY);
     }
 
+    @MessageMapping("/sendLocation")
+    @SendTo("/topic/subwayLocation")
+    public SubwayDetailDTO sendSubwayLocation(double locationX, double locationY) {
+        // 실시간으로 좌표 데이터를 웹 클라이언트에 전송
+        return subwaySearchService.getSubwayDetailsByLocation(locationX, locationY);
+    }
 }
