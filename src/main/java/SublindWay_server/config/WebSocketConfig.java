@@ -12,7 +12,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // 클라이언트가 WebSocket 연결을 수립할 수 있게 /ws 경로 설정
-        registry.addEndpoint("/ws").setAllowedOrigins("*").withSockJS();
+        registry.addEndpoint("/ws")
+                .setAllowedOriginPatterns("http://localhost:3000") // 허용할 도메인 패턴
+                .withSockJS(); // SockJS 지원 활성화
     }
 
     @Override
