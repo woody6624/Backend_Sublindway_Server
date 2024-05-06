@@ -27,20 +27,18 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
-	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2' //swagger
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-	implementation group: 'com.google.firebase', name: 'firebase-admin', version: '8.0.1'
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 	implementation group: 'commons-codec', name: 'commons-codec', version: '1.9'
 	implementation 'net.minidev:json-smart:2.4.7'
 	implementation 'javax.xml.bind:jaxb-api:2.3.1'
 	implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.1'
 	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.125'
-	implementation 'commons-codec:commons-codec:1.15' // 이 버전은 예시이며, 최신 버전을 확인해주세요
+	implementation 'commons-codec:commons-codec:1.15'
 
 }
 
