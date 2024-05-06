@@ -1,5 +1,6 @@
 package SublindWay_server.controller;
 
+import SublindWay_server.dto.SubwayUpDownSendDto;
 import SublindWay_server.entity.ImageEntity;
 import SublindWay_server.repository.ImageRepository;
 import SublindWay_server.service.NaverOCRService;
@@ -50,11 +51,17 @@ public class ImageController {
     @ApiResponse(responseCode = "200", description = "Successful Operation", content = @Content(schema = @Schema(implementation = List.class)))
     @ApiResponse(responseCode = "400", description = "Invalid input")
     @ApiResponse(responseCode = "500", description = "Internal server error")
-    public List<String> imageUploadAndCheckSubwayNum(@Parameter(description = "이미지 파일", required = true) @RequestParam("file") MultipartFile file) throws IOException {
+    public SubwayUpDownSendDto imageUploadAndCheckSubwayNum(@Parameter(description = "이미지 파일", required = true) @RequestParam("file") MultipartFile file) throws IOException {
         String s3Key = s3Uploader.uploadImageFile(file, ""); // 이미지를 업로드하고 반환된 S3 키(경로)를 얻음
         List<String> answer = ocrAnalyzer.getOcrSubwayNumList(naverOCRService.processOCR(s3Key));
         s3Uploader.removeNewFile(new File(s3Key + ".jpg"));
-        return answer;
+        StringBuilder tmp=new StringBuilder();
+        for(int i=0; i<answer.size(); i++){
+            tmp.append(answer.get(i));
+        }
+        SubwayUpDownSendDto subwayUpDownSendDto=new SubwayUpDownSendDto();
+        subwayUpDownSendDto.setUpDown(tmp.toString());
+        return subwayUpDownSendDto;
     }
 
     @GetMapping(value = "/find-image-uuid")
