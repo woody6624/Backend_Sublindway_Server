@@ -18,15 +18,15 @@ public class SubwayDetailEntity {
     private Integer subwayNum;
 
     @Column(name = "subway_line")
-    private Integer subwayLine;
+    private String subwayLine;
 
     @Column(name = "subway_name")
     private String subwayName;
 
     @Column(name= "subway_position_x")
-    private double subwayPositionX;
+    private Double subwayPositionX;
 
     @Column(name= "subway_position_y")
-    private double subwayPositionY;
+    private Double subwayPositionY;
 
 }
