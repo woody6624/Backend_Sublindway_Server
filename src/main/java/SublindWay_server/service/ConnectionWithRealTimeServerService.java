@@ -150,9 +150,8 @@ public class ConnectionWithRealTimeServerService {
         return nearbySubwayInfo.getBtrainNo();
     }
 
-    public String trackingTrain(String btrainNo){  //열차 추적
+    public TrainInfoEntity trackingTrain(String btrainNo){  //열차 추적
         Optional<TrainInfoEntity> trainInfoEntity=trainInfoRepository.findById(btrainNo);
-        String presentStationInfo="현재 해당열차는 "+trainInfoEntity.get().getStatnNm()+"에 위치하고 있습니다";//현재 역
-        return presentStationInfo;
+        return trainInfoEntity.get();
     }
 }

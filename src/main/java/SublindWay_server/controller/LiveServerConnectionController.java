@@ -1,5 +1,6 @@
 package SublindWay_server.controller;
 
+import SublindWay_server.entity.TrainInfoEntity;
 import SublindWay_server.service.ConnectionWithRealTimeServerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -22,7 +23,7 @@ public class LiveServerConnectionController {
 
     @GetMapping("/track-train")
     @Operation(summary = "열차추적", description = "열차번호로 역이 어딘지 추적")
-    public String trackingTrain(@Parameter(description = "열차번호", required = true) @RequestParam String trainNumber) {
+    public TrainInfoEntity trackingTrain(@Parameter(description = "열차번호", required = true) @RequestParam String trainNumber) {
         return connectionWithRealTimeServerService.trackingTrain(trainNumber);
     }
 }
