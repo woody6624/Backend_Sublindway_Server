@@ -26,7 +26,6 @@ public class ConnectionWithRealTimeServerService {
     public List<NearbySubwayInfo> subwayInfos=new ArrayList<>();
     public List<NearbySubwayInfo> subwayInfos_next_station=new ArrayList<>();
     private final TrainInfoRepository trainInfoRepository;
-
     private SubwayDetailRepository subwayDetailRepository;
     @Autowired
     public ConnectionWithRealTimeServerService(TrainInfoRepository trainInfoRepository, SubwayDetailRepository subwayDetailRepository) {
