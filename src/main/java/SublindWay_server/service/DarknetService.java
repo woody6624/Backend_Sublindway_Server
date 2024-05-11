@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
-
 @Service
 public class DarknetService {
 
@@ -19,10 +18,8 @@ public class DarknetService {
         ProcessBuilder processBuilder = new ProcessBuilder();
 
         try {
-            // darknet 디렉토리 설정
-            processBuilder.directory(new File(System.getProperty("user.home"), "darknet"));
-            // 명령어 실행
-            processBuilder.command("bash", "-c", "./darknet detect cfg/yolov3.cfg yolov3.weights " + imagePath);
+            // Darknet 실행 명령어 설정, 절대 경로 사용
+            processBuilder.command("/bin/bash", "-c", "/home/ubuntu/darknet/darknet detect /home/ubuntu/darknet/cfg/yolov3.cfg /home/ubuntu/darknet/yolov3.weights " + imagePath);
 
             // 프로세스 실행
             Process process = processBuilder.start();
