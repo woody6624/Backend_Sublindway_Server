@@ -20,11 +20,4 @@ public class UserEntity {
 
     @Column(name = "user_name")
     private String userName;
-
-    @Column(name = "email")
-    private String email;
-
-    @Column(name = "refresh_token")
-    private String refreshToken;
-
 }

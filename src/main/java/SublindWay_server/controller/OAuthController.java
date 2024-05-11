@@ -1,4 +1,4 @@
-/*package SublindWay_server.controller;
+package SublindWay_server.controller;
 
 import SublindWay_server.service.OAuthService;
 import lombok.AllArgsConstructor;
@@ -16,8 +16,8 @@ public class OAuthController {
     public void kakaoCallback(@RequestParam String code){
         String gugucaca=oAuthService.getKakaoAccessToken(code);
         System.out.println(gugucaca);
+        oAuthService.createKakaoUser(gugucaca);
     }
 
 
 }
-*/
