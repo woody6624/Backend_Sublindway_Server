@@ -1,5 +1,7 @@
 package SublindWay_server.service;
+import SublindWay_server.entity.SubwayDetailEntity;
 import SublindWay_server.entity.TrainInfoEntity;
+import SublindWay_server.repository.SubwayDetailRepository;
 import SublindWay_server.repository.TrainInfoRepository;
 import SublindWay_server.utility.TrainInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -16,9 +18,11 @@ public class GetAllSubwayTrainDataService {
 
 
     private final TrainInfoRepository trainInfoRepository;
+    private  final SubwayDetailRepository subwayDetailRepository;
     @Autowired
-    public GetAllSubwayTrainDataService(TrainInfoRepository trainInfoRepository){
+    public GetAllSubwayTrainDataService(TrainInfoRepository trainInfoRepository, SubwayDetailRepository subwayDetailRepository){
         this.trainInfoRepository=trainInfoRepository;
+        this.subwayDetailRepository = subwayDetailRepository;
     }
     public void getAllTrainData(){ //모든 호선 데이터에 대해서
         trainInfoRepository.deleteAll();//레포지터리에 저장된 데이터를 모두 제거해줍니다.
@@ -88,7 +92,7 @@ public class GetAllSubwayTrainDataService {
                 String trainSttus = node.get("trainSttus").asText();
                 String directAt = node.get("directAt").asText();
                 String lstcarAt = node.get("lstcarAt").asText();
-
+                String statnId = node.get("statnId").asText();
                 trainInfo.setTrainNo(trainNo);
                 trainInfo.setStatnNm(statnNm);
                 trainInfo.setSubwayNm(subwayNm);
@@ -97,7 +101,6 @@ public class GetAllSubwayTrainDataService {
                 trainInfo.setTrainSttus(trainSttus);
                 trainInfo.setDirectAt(directAt);
                 trainInfo.setLstcarAt(lstcarAt);
-
                 trainInfoEntity.setTrainNo(trainInfo.getTrainNo());
                 trainInfoEntity.setStatnNm(trainInfo.getStatnNm());
                 trainInfoEntity.setSubwayNm(trainInfo.getSubwayNm());
@@ -106,6 +109,10 @@ public class GetAllSubwayTrainDataService {
                 trainInfoEntity.setTrainSttus(trainInfo.getTrainSttus());
                 trainInfoEntity.setDirectAt(trainInfo.getDirectAt());
                 trainInfoEntity.setLstcarAt(trainInfo.getLstcarAt());
+
+                SubwayDetailEntity subwayDetailEntity=subwayDetailRepository.findSubwayBySubwayName(trainInfo.getStatnNm());
+                int subwayNum=subwayDetailEntity.getSubwayNum();
+                trainInfoEntity.setStatnId(String.valueOf(subwayNum));
                 System.out.println(trainInfoEntity.toString());
                 trainInfoRepository.saveAndFlush(trainInfoEntity);
             }

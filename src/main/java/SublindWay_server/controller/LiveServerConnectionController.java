@@ -18,6 +18,7 @@ public class LiveServerConnectionController {
     @Operation(summary = "열차 번호 얻기", description = "열차역 이름과 상하행 2개를 넣어서 탑승할 열차번호 얻기")
     public String tests(@Parameter(description = "역명(단 xx역이면 xx까지만 작성)", required = true) @RequestParam String subwayId,
                         @Parameter(description = "상행 혹은 하행 작성", required = true) @RequestParam String upDown) {
+
         return connectionWithRealTimeServerService.connectionWithRealSubway(subwayId, upDown);
     }
 

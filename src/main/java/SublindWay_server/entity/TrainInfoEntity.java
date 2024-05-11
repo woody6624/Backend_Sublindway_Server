@@ -38,4 +38,7 @@ public class TrainInfoEntity {
 
     @Column(name = "lstcarAt")
     private String lstcarAt; // 막차 여부
+
+    @Column(name="statnId") //역이름
+    private String statnId;
 }
