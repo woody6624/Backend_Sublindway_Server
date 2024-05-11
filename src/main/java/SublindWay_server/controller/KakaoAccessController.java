@@ -1,4 +1,4 @@
-package SublindWay_server.controller;
+/*package SublindWay_server.controller;
 
 import SublindWay_server.service.OAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,3 +14,4 @@ public class KakaoAccessController {
     }
 
 }
+*/
