@@ -7,16 +7,16 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/oauth")
+@RequestMapping("/web")
 public class OAuthController {
     @Autowired
     OAuthService oAuthService;
     @ResponseBody
-    @GetMapping("/kakao")
-    public void kakaoCallback(@RequestParam String code){
+    @GetMapping("/login")
+    public String kakaoCallback(@RequestParam String code){
         String gugucaca=oAuthService.getKakaoAccessToken(code);
         System.out.println(gugucaca);
-        oAuthService.createKakaoUser(gugucaca);
+        return oAuthService.createKakaoUser(gugucaca);
     }
 
 

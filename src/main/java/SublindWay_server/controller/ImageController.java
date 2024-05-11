@@ -51,8 +51,9 @@ public class ImageController {
     @ApiResponse(responseCode = "200", description = "Successful Operation", content = @Content(schema = @Schema(implementation = List.class)))
     @ApiResponse(responseCode = "400", description = "Invalid input")
     @ApiResponse(responseCode = "500", description = "Internal server error")
-    public SubwayUpDownSendDto imageUploadAndCheckSubwayNum(@Parameter(description = "이미지 파일", required = true) @RequestParam("file") MultipartFile file) throws IOException {
-        String s3Key = s3Uploader.uploadImageFile(file, ""); // 이미지를 업로드하고 반환된 S3 키(경로)를 얻음
+    public SubwayUpDownSendDto imageUploadAndCheckSubwayNum(@Parameter(description = "이미지 파일", required = true) @RequestParam("file") MultipartFile file,@RequestParam("kakaoId")
+                                                            String kakaoId) throws IOException {
+        String s3Key = s3Uploader.uploadImageFile(file,kakaoId,""); // 이미지를 업로드하고 반환된 S3 키(경로)를 얻음
         List<String> answer = ocrAnalyzer.getOcrSubwayNumList(naverOCRService.processOCR(s3Key));
         s3Uploader.removeNewFile(new File(s3Key + ".jpg"));
         StringBuilder tmp=new StringBuilder();
