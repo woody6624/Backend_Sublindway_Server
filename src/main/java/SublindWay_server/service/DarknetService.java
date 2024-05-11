@@ -5,9 +5,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
+
 
 @Service
 public class DarknetService {
@@ -26,9 +28,10 @@ public class DarknetService {
             Process process = processBuilder.start();
 
             // 결과 출력 읽기
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
+                    System.out.println("STDOUT: " + line); // 로그 추가
                     if (line.contains(":")) {
                         detectedObjects.add(line.substring(0, line.indexOf(":")).trim());
                     }
@@ -36,19 +39,19 @@ public class DarknetService {
             }
 
             // 에러 출력 읽기
-            try (BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
+            try (BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream(), StandardCharsets.UTF_8))) {
                 String line;
                 while ((line = errorReader.readLine()) != null) {
-                    System.err.println("ERROR: " + line);
+                    System.err.println("STDERR: " + line); // 로그 추가
                 }
             }
 
             // 프로세스 종료 대기
             int exitCode = process.waitFor();
-            System.out.println("Exited with error code : " + exitCode);
+            System.out.println("Process exited with code " + exitCode);
 
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+            System.err.println("Failed to run darknet: " + e.getMessage());
         }
 
         return detectedObjects;
