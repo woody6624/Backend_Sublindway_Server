@@ -1,16 +1,16 @@
 package SublindWay_server.controller;
+
 import SublindWay_server.dto.SendXyLocation;
 import SublindWay_server.dto.SubwayDetailDTO;
 import SublindWay_server.service.SubwaySearchService;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,6 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @RestController
 public class SubwayController {
     private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
+    private final Map<String, SendXyLocation> lastKnownLocations = new ConcurrentHashMap<>();
 
     @Autowired
     private SubwaySearchService subwaySearchService;
@@ -30,7 +31,9 @@ public class SubwayController {
             @Parameter(description = "y 좌표(소수점 6자리)", required = true) @RequestParam double locationY) {
 
         SubwayDetailDTO subwayDetail = subwaySearchService.getSubwayDetailsByLocation(locationX, locationY);
-        sendEventToUser(userId, new SendXyLocation(locationX, locationY));
+        SendXyLocation sendXyLocation = new SendXyLocation(locationX, locationY);
+        lastKnownLocations.put(userId, sendXyLocation);
+        sendEventToUser(userId, sendXyLocation);
 
         return subwayDetail;
     }
@@ -42,6 +45,11 @@ public class SubwayController {
 
         emitter.onCompletion(() -> emitters.remove(userId));
         emitter.onTimeout(() -> emitters.remove(userId));
+
+        SendXyLocation initialLocation = lastKnownLocations.get(userId);
+        if (initialLocation != null) {
+            sendEventToUser(userId, initialLocation);
+        }
 
         return emitter;
     }
