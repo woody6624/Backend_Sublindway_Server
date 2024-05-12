@@ -1,4 +1,4 @@
-package SublindWay_server.config;
+/*package SublindWay_server.config;
 import SublindWay_server.dto.SendXyLocation;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
@@ -46,3 +46,4 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 
 }
+*/
