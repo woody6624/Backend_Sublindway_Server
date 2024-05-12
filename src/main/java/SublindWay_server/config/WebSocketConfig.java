@@ -35,11 +35,14 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
                 if (StompCommand.CONNECT.equals(accessor.getCommand())) {
                     String userId = accessor.getFirstNativeHeader("userId");
+                    System.out.println("Received userId: " + userId);  // 로그 출력
                     accessor.getSessionAttributes().put("userId", userId);
                 }
+
                 return message;
             }
         });
     }
+
 
 }
