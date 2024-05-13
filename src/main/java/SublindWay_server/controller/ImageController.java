@@ -6,6 +6,7 @@ import SublindWay_server.repository.ImageRepository;
 import SublindWay_server.service.NaverOCRService;
 import SublindWay_server.service.OcrAnalyzer;
 import SublindWay_server.service.S3Uploader;
+import SublindWay_server.service.YoloImageDetectionService;
 import com.amazonaws.services.s3.AmazonS3;
 import io.swagger.v3.oas.annotations.Operation;
 
@@ -36,6 +37,9 @@ public class ImageController {
     S3Uploader s3Uploader;
     @Autowired
     private ImageRepository imageRepository;
+
+    @Autowired
+    YoloImageDetectionService yoloImageDetectionService;
     @Autowired
     NaverOCRService naverOCRService;
     @Autowired
@@ -55,6 +59,8 @@ public class ImageController {
                                                             String kakaoId) throws IOException {
         String s3Key = s3Uploader.uploadImageFile(file,kakaoId,""); // 이미지를 업로드하고 반환된 S3 키(경로)를 얻음
         List<String> answer = ocrAnalyzer.getOcrSubwayNumList(naverOCRService.processOCR(s3Key));
+        String siuuuu=yoloImageDetectionService.detectObjects(s3Key);
+        System.out.println(siuuuu);
         s3Uploader.removeNewFile(new File(s3Key + ".jpg"));
         StringBuilder tmp=new StringBuilder();
         for(int i=0; i<answer.size(); i++){
@@ -62,6 +68,8 @@ public class ImageController {
         }
         SubwayUpDownSendDto subwayUpDownSendDto=new SubwayUpDownSendDto();
         subwayUpDownSendDto.setUpDown(tmp.toString());
+
+
         return subwayUpDownSendDto;
     }
 
