@@ -1,4 +1,4 @@
-package SublindWay_server.controller;
+/*package SublindWay_server.controller;
 
 import SublindWay_server.dto.SendXyLocation;
 import SublindWay_server.dto.SubwayDetailDTO;
@@ -38,7 +38,7 @@ public class SubwayController {
         return subwayDetail;
     }
 
-    @GetMapping("/stream/{userId}")
+    @GetMapping("/stream/kk/{userId}")
     public SseEmitter subscribe(@PathVariable String userId) {
         SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
         emitters.put(userId, emitter);
@@ -65,3 +65,4 @@ public class SubwayController {
         }
     }
 }
+*/

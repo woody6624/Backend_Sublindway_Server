@@ -39,9 +39,9 @@ public class OcrAnalyzer {
         }
         int difference = Integer.parseInt(subwayNums.get(0)) - Integer.parseInt(subwayNums.get(1));
         if (difference > 0) {
-            answerList.add("하행");
-        } else if (difference < 0) {
             answerList.add("상행");
+        } else if (difference < 0) {
+            answerList.add("하행");
         } else {
             answerList.add("다시 사진을 찍어 주세요.");  // 비교 불가능한 상황일 때 메시지
         }
