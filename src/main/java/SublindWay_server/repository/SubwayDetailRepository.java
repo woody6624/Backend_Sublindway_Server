@@ -19,8 +19,8 @@ public interface SubwayDetailRepository extends JpaRepository<SubwayDetailEntity
 
     @Query(value = "SELECT * FROM subway_detail ORDER BY ST_Distance_Sphere(point(:locationX, :locationY), point(subway_position_x, subway_position_y)) ASC LIMIT 1", nativeQuery = true)
     SubwayDetailEntity findNearestSubway(@Param("locationX") double locationY, @Param("locationY") double locationX);
-    @Query("SELECT s FROM SubwayDetailEntity s WHERE s.subwayName = :subwayName")
-    SubwayDetailEntity findSubwayBySubwayName(@Param("subwayName") String subwayName);
+    @Query("SELECT s FROM SubwayDetailEntity s WHERE s.subwayName = :subwayName AND s.subwayLine = :subwayLine")
+    SubwayDetailEntity findSubwayBySubwayName(@Param("subwayName") String subwayName,@Param("subwayLine") String subwayLine);
 
 
 }

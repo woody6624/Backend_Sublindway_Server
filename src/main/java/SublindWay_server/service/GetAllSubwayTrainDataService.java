@@ -103,14 +103,14 @@ public class GetAllSubwayTrainDataService {
                 trainInfo.setLstcarAt(lstcarAt);
                 trainInfoEntity.setTrainNo(trainInfo.getTrainNo());
                 trainInfoEntity.setStatnNm(trainInfo.getStatnNm());
-                trainInfoEntity.setSubwayNm(trainInfo.getSubwayNm());
+                trainInfoEntity.setSubwayNm("0"+trainInfo.getSubwayNm());
                 trainInfoEntity.setUpdnLine(trainInfo.getUpdnLine());
                 trainInfoEntity.setStatnTnm(trainInfo.getStatnTnm());
                 trainInfoEntity.setTrainSttus(trainInfo.getTrainSttus());
                 trainInfoEntity.setDirectAt(trainInfo.getDirectAt());
                 trainInfoEntity.setLstcarAt(trainInfo.getLstcarAt());
 
-                SubwayDetailEntity subwayDetailEntity=subwayDetailRepository.findSubwayBySubwayName(trainInfo.getStatnNm());
+                SubwayDetailEntity subwayDetailEntity=subwayDetailRepository.findSubwayBySubwayName(trainInfo.getStatnNm(),trainInfo.getSubwayNm());
                 int subwayNum=subwayDetailEntity.getSubwayNum();
                 trainInfoEntity.setStatnId(String.valueOf(subwayNum));
                 System.out.println(trainInfoEntity.toString());
