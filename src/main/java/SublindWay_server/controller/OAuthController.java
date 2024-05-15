@@ -1,5 +1,6 @@
 package SublindWay_server.controller;
 
+import SublindWay_server.dto.UserDTO;
 import SublindWay_server.entity.UserEntity;
 import SublindWay_server.repository.UserRepository;
 import SublindWay_server.service.OAuthService;
@@ -24,7 +25,7 @@ public class OAuthController {
     @GetMapping("/kakao")
     @Operation(summary = "웹에서 인가 코드 전달", description = "해당 인가 코드로 로그인 구현,유저의 id값 리턴")
 //로그인 부분
-    public String kakaoLoginWeb(@RequestParam String code){
+    public UserDTO kakaoLoginWeb(@RequestParam String code){
         String gugucaca=oAuthService.getKakaoAccessToken(code);
         System.out.println(gugucaca);
         return oAuthService.createKakaoUser(gugucaca);

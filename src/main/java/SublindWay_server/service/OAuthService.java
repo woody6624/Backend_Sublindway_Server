@@ -1,5 +1,6 @@
 package SublindWay_server.service;
 
+import SublindWay_server.dto.UserDTO;
 import SublindWay_server.entity.UserEntity;
 import SublindWay_server.repository.UserRepository;
 import com.google.gson.JsonElement;
@@ -22,7 +23,7 @@ public class OAuthService{
     @Value("${KAKAO_CLIENT_ID}")
     String clientId;
 
-    public String createKakaoUser(String token) {
+    public UserDTO createKakaoUser(String token) {
         String reqURL = "https://kapi.kakao.com/v2/user/me";
 
         // access_token을 이용하여 사용자 정보 조회
@@ -65,14 +66,20 @@ public class OAuthService{
                         UserEntity saveEntity=userEntity.get();
                         saveEntity.setAccessToken(token);
                         userRepository.save(saveEntity);
-                        return userEntity.get().getUserName();
+                        UserDTO sendDto=new UserDTO();
+                        sendDto.setKakaoId(saveEntity.getMuckatUserId());
+                        sendDto.setUserName(saveEntity.getUserName());
+                        return sendDto;
                     } else { // 해당 유저가 처음일 경우 -> 회원가입
                         UserEntity saveEntity = new UserEntity();
                         saveEntity.setMuckatUserId(kakaoId);
                         saveEntity.setUserName(nickname);
                         saveEntity.setAccessToken(token);
                         userRepository.save(saveEntity);
-                        return nickname; // 새로 저장된 유저의 닉네임 반환
+                        UserDTO sendDto=new UserDTO();
+                        sendDto.setKakaoId(saveEntity.getMuckatUserId());
+                        sendDto.setUserName(saveEntity.getUserName());
+                        return sendDto; // 새로 저장된 유저의 닉네임 반환
                     }
                 }
             } else {
