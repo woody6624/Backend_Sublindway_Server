@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.Optional;
 
@@ -25,10 +26,13 @@ public class OAuthController {
     @GetMapping("/kakao")
     @Operation(summary = "웹에서 인가 코드 전달", description = "해당 인가 코드로 로그인 구현,유저의 id값 리턴")
 //로그인 부분
-    public UserDTO kakaoLoginWeb(@RequestParam String code){
+    public RedirectView  kakaoLoginWeb(@RequestParam String code){
         String gugucaca=oAuthService.getKakaoAccessToken(code);
         System.out.println(gugucaca);
-        return oAuthService.createKakaoUser(gugucaca);
+        UserDTO user = oAuthService.createKakaoUser(gugucaca);
+        String redirectUrl = "http://localhost:3000/locationMap?kakaoId=" + user.getKakaoId() + "&userName=" + user.getUserName();
+
+        return new RedirectView(redirectUrl);
     }
 
     @PostMapping(value="/logout")
