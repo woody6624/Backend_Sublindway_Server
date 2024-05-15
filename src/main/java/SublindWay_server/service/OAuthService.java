@@ -24,8 +24,7 @@ public class OAuthService {
     @Value("${KAKAO_CLIENT_ID}")
     private String clientId;
 
-    @Value("${KAKAO_REDIRECT_URI}")
-    private String redirectUri;
+    private String redirectUri="http://13.209.19.20:8079/oauth/kakao";
 
     public UserDTO createKakaoUser(String token) {
         String reqURL = "https://kapi.kakao.com/v2/user/me";
