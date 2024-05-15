@@ -1,5 +1,6 @@
 package SublindWay_server.service;
 
+import SublindWay_server.dto.UserDTO;
 import SublindWay_server.entity.UserEntity;
 import SublindWay_server.repository.UserRepository;
 import com.google.gson.JsonElement;
@@ -26,7 +27,7 @@ public class OAuthService {
     @Value("${KAKAO_REDIRECT_URI}")
     private String redirectUri;
 
-    public String createKakaoUser(String token) {
+    public UserDTO createKakaoUser(String token) {
         String reqURL = "https://kapi.kakao.com/v2/user/me";
 
         try {
@@ -55,14 +56,22 @@ public class OAuthService {
                         UserEntity existingUser = userEntity.get();
                         existingUser.setAccessToken(token);
                         userRepository.save(existingUser);
-                        return existingUser.getUserName();
+                        UserDTO userDTO=new UserDTO();
+                        userDTO.setKakaoId(existingUser.getMuckatUserId());
+                        userDTO.setUserName(existingUser.getUserName());
+
+                        return userDTO;
                     } else {
                         UserEntity newUser = new UserEntity();
                         newUser.setMuckatUserId(kakaoId);
                         newUser.setUserName(nickname);
                         newUser.setAccessToken(token);
                         userRepository.save(newUser);
-                        return nickname;
+                        UserDTO userDTO=new UserDTO();
+                        userDTO.setKakaoId(newUser.getMuckatUserId());
+                        userDTO.setUserName(newUser.getUserName());
+
+                        return userDTO;
                     }
                 }
             } else {
