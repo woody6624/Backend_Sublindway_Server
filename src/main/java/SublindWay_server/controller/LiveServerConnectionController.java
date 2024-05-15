@@ -1,4 +1,3 @@
-/*
 package SublindWay_server.controller;
 
 import SublindWay_server.entity.TrainInfoEntity;
@@ -29,4 +28,3 @@ public class LiveServerConnectionController {
       return connectionWithRealTimeServerService.trackingTrain(trainNumber);
   }
 }
-*/
