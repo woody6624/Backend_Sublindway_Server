@@ -7,6 +7,8 @@ import SublindWay_server.entity.TrainInfoEntity;
 import SublindWay_server.repository.ImageRepository;
 import SublindWay_server.service.*;
 import com.amazonaws.services.s3.AmazonS3;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +21,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -59,23 +64,57 @@ public class ImageController {
                                                     @RequestParam("locationX") double locationX, @RequestParam("locationY") double locationY) throws IOException {
         String s3Key = s3Uploader.uploadImageFile(file, kakaoId, "");
         List<String> answer = ocrAnalyzer.getOcrSubwayNumList(naverOCRService.processOCR(s3Key));
-        s3Uploader.removeNewFile(new File(s3Key + ".jpg"));
 
         SubwayDetailDTO subwayDetailDTO = subwaySearchServices.getSubwayDetailsByLocation(locationX, locationY);
-        String direction="";
-        if(answer.contains("상행")){
-            direction="상행";
+        String direction = "";
+
+        if (answer.contains("상행")) {
+            direction = "상행";
+        } else if (answer.contains("하행")) {
+            direction = "하행";
+        } else {
+            // Pattern to match numbers in the format "2-3"
+            Pattern pattern = Pattern.compile("\\d+-\\d+");
+            boolean foundMatch = false;
+            for (String ans : answer) {
+                Matcher matcher = pattern.matcher(ans);
+                if (matcher.find()) {
+                    direction = ans;
+                    foundMatch = true;
+                    break;
+                }
+            }
+
+            // If no "2-3" pattern found, parse YOLO result for direction
+            if (!foundMatch) {
+                String yoloResult = yoloImageDetectionService.detectObjects(s3Key);
+                yoloResult = yoloResult.substring(1, yoloResult.length() - 1).replace("\\\"", "\"");
+
+                // Create ObjectMapper instance
+                ObjectMapper mapper = new ObjectMapper();
+
+                // Parse the JSON array
+                JsonNode arrayNode = mapper.readTree(yoloResult);
+
+                // List to store the names
+                List<String> names = new ArrayList<>();
+
+                // Iterate over the array elements
+                for (JsonNode node : arrayNode) {
+                    String name = node.get("name").asText();
+                    names.add(name);
+                }
+
+                // Join the names into a single string (or any other format you need)
+                direction = String.join(", ", names);
+            }
         }
-        else if(answer.contains("하행")){
-            direction="하행";
-        }
-        else{
-            direction="상 하행을 구분 불가능한 사진입니다";
-        }
+
         String trainNum = connectionWithRealTimeServerService.connectionWithRealSubway(subwayDetailDTO.getSubwayName(), direction);
 
-        SendWebData sendWebData = new SendWebData(trainNum,direction,locationX, locationY);
+        SendWebData sendWebData = new SendWebData(trainNum, direction, locationX, locationY);
         lastKnownLocations.put(kakaoId, sendWebData);
+        s3Uploader.removeNewFile(new File(s3Key + ".jpg"));
         return sendWebData;
     }
 
@@ -87,7 +126,6 @@ public class ImageController {
         List<ImageEntity> imageEntities = imageRepository.findByKakaoId(kakaoId);
         return imageEntities.get(0).getImageUUID();
     }
-
 
     @GetMapping("/stream/{userId}")
     public SseEmitter subscribe(@PathVariable String userId) {

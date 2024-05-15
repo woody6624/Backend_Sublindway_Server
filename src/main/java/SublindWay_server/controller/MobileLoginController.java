@@ -5,6 +5,7 @@ import SublindWay_server.service.MobileLoginService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,4 +21,7 @@ public class MobileLoginController {
                         @Parameter(description = "유저이름을 주세용", required = true) @RequestParam String userName) {
         return mobileLoginService.getKakaoId(kakaoId,userName);
     }
+
+
+
 }
