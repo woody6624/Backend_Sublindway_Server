@@ -62,11 +62,15 @@ public class OAuthService{
 
                     Optional<UserEntity> userEntity = userRepository.findById(kakaoId);
                     if (userEntity.isPresent()) {
+                        UserEntity saveEntity=userEntity.get();
+                        saveEntity.setAccessToken(token);
+                        userRepository.save(saveEntity);
                         return userEntity.get().getUserName();
                     } else { // 해당 유저가 처음일 경우 -> 회원가입
                         UserEntity saveEntity = new UserEntity();
                         saveEntity.setMuckatUserId(kakaoId);
                         saveEntity.setUserName(nickname);
+                        saveEntity.setAccessToken(token);
                         userRepository.save(saveEntity);
                         return nickname; // 새로 저장된 유저의 닉네임 반환
                     }
@@ -101,7 +105,7 @@ public class OAuthService{
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
             sb.append("&client_id=").append(clientId); // TODO REST_API_KEY 입력
-            sb.append("&redirect_uri=http://localhost:8079/oauth/kakao"); // TODO 인가코드 받은 redirect_uri 입력
+            sb.append("&redirect_uri=http://13.209.19.20:8079/oauth/kakao"); // TODO 인가코드 받은 redirect_uri 입력
             sb.append("&code=" + code);
             bw.write(sb.toString());
             bw.flush();
@@ -138,4 +142,35 @@ public class OAuthService{
 
         return access_Token;
     }
+
+    public void kakaoLogout(String access_Token) {
+        String reqURL = "https://kapi.kakao.com/v1/user/logout";
+        try {
+            URL url = new URL(reqURL);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Authorization", "Bearer " + access_Token);
+
+            int responseCode = conn.getResponseCode();
+            System.out.println("responseCode : " + responseCode);
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+            String result = "";
+            String line = "";
+
+            while ((line = br.readLine()) != null) {
+                result += line;
+            }
+            System.out.println(result);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+
 }

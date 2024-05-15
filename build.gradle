@@ -40,6 +40,9 @@ dependencies {
 	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.125'
 	implementation 'commons-codec:commons-codec:1.15'
 	implementation 'com.google.code.gson:gson:2.8.7'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.session:spring-session-data-redis'
+
 
 }
 
