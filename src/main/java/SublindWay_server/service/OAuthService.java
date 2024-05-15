@@ -55,7 +55,7 @@ public class OAuthService {
                         UserEntity existingUser = userEntity.get();
                         existingUser.setAccessToken(token);
                         userRepository.save(existingUser);
-                        UserDTO userDTO=new UserDTO();
+                        UserDTO userDTO = new UserDTO();
                         userDTO.setKakaoId(existingUser.getMuckatUserId());
                         userDTO.setUserName(existingUser.getUserName());
 
@@ -66,7 +66,7 @@ public class OAuthService {
                         newUser.setUserName(nickname);
                         newUser.setAccessToken(token);
                         userRepository.save(newUser);
-                        UserDTO userDTO=new UserDTO();
+                        UserDTO userDTO = new UserDTO();
                         userDTO.setKakaoId(newUser.getMuckatUserId());
                         userDTO.setUserName(newUser.getUserName());
 
@@ -139,6 +139,7 @@ public class OAuthService {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Authorization", "Bearer " + accessToken);
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
             int responseCode = conn.getResponseCode();
             System.out.println("responseCode : " + responseCode);
@@ -160,7 +161,14 @@ public class OAuthService {
                     });
                 }
             } else {
-                System.out.println("Logout failed: " + responseCode);
+                try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getErrorStream()))) {
+                    StringBuilder errorResult = new StringBuilder();
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        errorResult.append(line);
+                    }
+                    System.out.println("Logout failed: " + errorResult.toString());
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
