@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Optional;
 
 @RestController
@@ -25,12 +27,19 @@ public class OAuthController {
     @ResponseBody
     @GetMapping("/kakao")
     @Operation(summary = "웹에서 인가 코드 전달", description = "해당 인가 코드로 로그인 구현,유저의 id값 리턴")
-//로그인 부분
-    public RedirectView  kakaoLoginWeb(@RequestParam String code){
-        String gugucaca=oAuthService.getKakaoAccessToken(code);
+    public RedirectView kakaoLoginWeb(@RequestParam String code) {
+        String gugucaca = oAuthService.getKakaoAccessToken(code);
         System.out.println(gugucaca);
         UserDTO user = oAuthService.createKakaoUser(gugucaca);
-        String redirectUrl = "http://localhost:3000/locationMap?kakaoId=" + user.getKakaoId() + "&userName=" + user.getUserName();
+
+        String userNameEncoded = "";
+        try {
+            userNameEncoded = URLEncoder.encode(user.getUserName(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+        String redirectUrl = "http://localhost:3000/locationMap?kakaoId=" + user.getKakaoId() + "&userName=" + userNameEncoded;
 
         return new RedirectView(redirectUrl);
     }
