@@ -8,7 +8,6 @@ import SublindWay_server.repository.ImageRepository;
 import SublindWay_server.service.*;
 import com.amazonaws.services.s3.AmazonS3;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -89,11 +88,6 @@ public class ImageController {
         return imageEntities.get(0).getImageUUID();
     }
 
-    @GetMapping("/track-train")
-    @Operation(summary = "열차추적", description = "열차번호로 역 위치 추적")
-    public TrainInfoEntity trackingTrain(@RequestParam("trainNumber") String trainNumber) {
-        return connectionWithRealTimeServerService.trackingTrain(trainNumber);
-    }
 
     @GetMapping("/stream/{userId}")
     public SseEmitter subscribe(@PathVariable String userId) {

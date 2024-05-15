@@ -1,4 +1,4 @@
-/*package SublindWay_server.controller;
+package SublindWay_server.controller;
 
 import SublindWay_server.dto.SendXyLocation;
 import SublindWay_server.dto.SubwayDetailDTO;
@@ -17,9 +17,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 public class SubwayController {
-    private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
-    private final Map<String, SendXyLocation> lastKnownLocations = new ConcurrentHashMap<>();
-
     @Autowired
     private SubwaySearchService subwaySearchService;
 
@@ -32,37 +29,7 @@ public class SubwayController {
 
         SubwayDetailDTO subwayDetail = subwaySearchService.getSubwayDetailsByLocation(locationX, locationY);
         SendXyLocation sendXyLocation = new SendXyLocation(locationX, locationY);
-        lastKnownLocations.put(userId, sendXyLocation);
-        sendEventToUser(userId, sendXyLocation);
-
         return subwayDetail;
     }
 
-    @GetMapping("/stream/kk/{userId}")
-    public SseEmitter subscribe(@PathVariable String userId) {
-        SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
-        emitters.put(userId, emitter);
-
-        emitter.onCompletion(() -> emitters.remove(userId));
-        emitter.onTimeout(() -> emitters.remove(userId));
-
-        SendXyLocation initialLocation = lastKnownLocations.get(userId);
-        if (initialLocation != null) {
-            sendEventToUser(userId, initialLocation);
-        }
-
-        return emitter;
-    }
-
-    private void sendEventToUser(String userId, SendXyLocation sendXyLocation) {
-        SseEmitter emitter = emitters.get(userId);
-        if (emitter != null) {
-            try {
-                emitter.send(sendXyLocation, MediaType.APPLICATION_JSON);
-            } catch (IOException e) {
-                emitter.completeWithError(e);
-            }
-        }
-    }
 }
-*/
