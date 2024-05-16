@@ -54,7 +54,8 @@ public class ImageController {
     OcrAnalyzer ocrAnalyzer;
     @Autowired
     private AmazonS3 amazonS3;
-
+    @Autowired
+    private SseService sseService; // SSE 서비스 주입
     @PostMapping(value = "/send-subways-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "이미지 넣기", description = "이미지 분석 By Naver Ocr")
     @ApiResponse(responseCode = "200", description = "Successful Operation", content = @Content(schema = @Schema(implementation = List.class)))
@@ -113,7 +114,8 @@ public class ImageController {
         String trainNum = connectionWithRealTimeServerService.connectionWithRealSubway(subwayDetailDTO.getSubwayName(), direction);
 
         SendWebData sendWebData = new SendWebData(trainNum, direction, locationX, locationY);
-        lastKnownLocations.put(kakaoId, sendWebData);
+        sseService.updateLastKnownLocation(kakaoId, sendWebData); // 도착지 데이터 업데이트
+        sseService.sendEventToUser(kakaoId, sendWebData); // 클라이언트에게 SSE 이벤트 전송
         s3Uploader.removeNewFile(new File(s3Key + ".jpg"));
         return sendWebData;
     }
@@ -126,31 +128,10 @@ public class ImageController {
         List<ImageEntity> imageEntities = imageRepository.findByKakaoId(kakaoId);
         return imageEntities.get(0).getImageUUID();
     }
-
     @GetMapping("/stream/{userId}")
     public SseEmitter subscribe(@PathVariable String userId) {
-        SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
-        emitters.put(userId, emitter);
-
-        emitter.onCompletion(() -> emitters.remove(userId));
-        emitter.onTimeout(() -> emitters.remove(userId));
-
-        SendWebData initialLocation = lastKnownLocations.get(userId);
-        if (initialLocation != null) {
-            sendEventToUser(userId, initialLocation);
-        }
-
-        return emitter;
+        return sseService.subscribe(userId); // SSE 구독
     }
 
-    private void sendEventToUser(String userId, SendWebData sendWebData) {
-        SseEmitter emitter = emitters.get(userId);
-        if (emitter != null) {
-            try {
-                emitter.send(sendWebData, MediaType.APPLICATION_JSON);
-            } catch (IOException e) {
-                emitter.completeWithError(e);
-            }
-        }
-    }
+
 }
