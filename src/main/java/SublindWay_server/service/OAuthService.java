@@ -10,10 +10,13 @@ import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 @Service
@@ -22,7 +25,7 @@ public class OAuthService {
     UserRepository userRepository;
     @Value("${KAKAO_CLIENT_ID}")
     String clientId;
-
+    private String logoutRedirectUri="http://13.209.19.20:8079/oauth/logout";
     public UserDTO createKakaoUser(String token) {
         String reqURL = "https://kapi.kakao.com/v2/user/me";
 
@@ -157,28 +160,30 @@ public class OAuthService {
     }
 
 
-    public void kakaoLogout(String access_Token) {
-        String reqURL = "https://kapi.kakao.com/v1/user/logout";
+    public void kakaoLogout() {
+        String reqURL = "https://kauth.kakao.com/oauth/logout";
+
         try {
-            URL url = new URL(reqURL);
+            // URL에 쿼리 파라미터 추가
+            String urlWithParams = reqURL + "?client_id=" + URLEncoder.encode(clientId, StandardCharsets.UTF_8)
+                    + "&logout_redirect_uri=" + URLEncoder.encode(logoutRedirectUri, StandardCharsets.UTF_8);
+
+            URL url = new URL(urlWithParams);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Authorization", "Bearer " + access_Token);
+            conn.setRequestMethod("GET");
 
             int responseCode = conn.getResponseCode();
             System.out.println("responseCode : " + responseCode);
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-
-            String result = "";
-            String line = "";
-
-            while ((line = br.readLine()) != null) {
-                result += line;
+            if (responseCode == HttpURLConnection.HTTP_MOVED_TEMP || responseCode == HttpURLConnection.HTTP_MOVED_PERM) { // 302 리다이렉트 응답 코드
+                String location = conn.getHeaderField("Location");
+                System.out.println("Redirect to: " + location);
+                // 리다이렉트 URL로 이동 처리 필요
+            } else {
+                System.out.println("Error: Failed to logout, response code: " + responseCode);
             }
-            System.out.println(result);
+
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

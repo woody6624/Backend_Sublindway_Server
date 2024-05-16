@@ -44,11 +44,10 @@ public class OAuthController {
         return new RedirectView(redirectUrl);
     }
 
-    @PostMapping(value="/logout")
-    @Operation(summary = "엑세스 토큰으로 로그아웃", description = "로그아웃 구현")
-    public String logout(String accessToken) {
-        oAuthService.kakaoLogout(accessToken);
-        return "redirect:/";
+    @GetMapping("/logout")
+    public String logout() {
+        oAuthService.kakaoLogout();
+        return "로그아웃 성공";
     }
     @GetMapping(value="/get-access-token")
     @Operation(summary = "유저 id로 엑세스토큰 get", description = "로그아웃 시 필요")
