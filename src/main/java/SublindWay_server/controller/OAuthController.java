@@ -47,7 +47,7 @@ public class OAuthController {
     @GetMapping("/logout")
     public RedirectView logout() {
         oAuthService.kakaoLogout();
-        String redirectUrl="http://localhost:3000";
+        String redirectUrl="http://localhost:3000/login";
 
         return new RedirectView(redirectUrl);
     }
