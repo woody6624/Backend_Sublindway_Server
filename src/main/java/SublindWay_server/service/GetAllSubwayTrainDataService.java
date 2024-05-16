@@ -92,7 +92,7 @@ public class GetAllSubwayTrainDataService {
                 String trainSttus = node.get("trainSttus").asText();
                 String directAt = node.get("directAt").asText();
                 String lstcarAt = node.get("lstcarAt").asText();
-                String statnTid = node.get("statnTid").asText();
+                String statnId = node.get("statnId").asText();
                 trainInfo.setTrainNo(trainNo);
                 trainInfo.setStatnNm(statnNm);
                 trainInfo.setSubwayNm(subwayNm);
@@ -109,7 +109,7 @@ public class GetAllSubwayTrainDataService {
                 trainInfoEntity.setTrainSttus(trainInfo.getTrainSttus());
                 trainInfoEntity.setDirectAt(trainInfo.getDirectAt());
                 trainInfoEntity.setLstcarAt(trainInfo.getLstcarAt());
-                trainInfoEntity.setStatnId(statnTid);
+                trainInfoEntity.setStatnId(statnId);
                 System.out.println(trainInfoEntity.toString());
                 trainInfoRepository.saveAndFlush(trainInfoEntity);
             }
