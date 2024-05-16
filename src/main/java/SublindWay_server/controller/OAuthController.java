@@ -5,6 +5,7 @@ import SublindWay_server.entity.UserEntity;
 import SublindWay_server.repository.UserRepository;
 import SublindWay_server.service.OAuthService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +46,15 @@ public class OAuthController {
     }
 
     @GetMapping("/logout")
-    public String logout() {
+    public String logout(HttpServletRequest request) {
         oAuthService.kakaoLogout();
+        // 세션 무효화
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+
+        return "Logged out from Kakao";
         return "로그아웃 성공";
     }
     @GetMapping(value="/get-access-token")
