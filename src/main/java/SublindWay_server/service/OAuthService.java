@@ -25,7 +25,7 @@ public class OAuthService {
     UserRepository userRepository;
     @Value("${KAKAO_CLIENT_ID}")
     String clientId;
-    private String logoutRedirectUri="http://13.209.19.20:8079/oauth/logout";
+    private String logoutRedirectUri="http://15.164.219.39:8079/oauth/logout";
     public UserDTO createKakaoUser(String token) {
         String reqURL = "https://kapi.kakao.com/v2/user/me";
 
@@ -113,7 +113,7 @@ public class OAuthService {
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
             sb.append("&client_id=").append(clientId);
-            sb.append("&redirect_uri=http://13.209.19.20:8079/oauth/kakao");
+            sb.append("&redirect_uri=http://15.164.219.39:8079/oauth/kakao");
             sb.append("&code=").append(code);
             bw.write(sb.toString());
             bw.flush();
