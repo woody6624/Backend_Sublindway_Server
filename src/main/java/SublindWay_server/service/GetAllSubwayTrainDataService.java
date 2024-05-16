@@ -81,6 +81,10 @@ public class GetAllSubwayTrainDataService {
         try {
             JsonNode rootNode = objectMapper.readTree(responseBody);
             JsonNode realtimeArrivalList = rootNode.get("realtimePositionList");
+            if (realtimeArrivalList == null || !realtimeArrivalList.isArray()) {
+                System.out.println("파싱 에러!");
+                return;
+            }
             for (JsonNode node : realtimeArrivalList) {
                 TrainInfoEntity trainInfoEntity = new TrainInfoEntity();
                 TrainInfo trainInfo=new TrainInfo();
