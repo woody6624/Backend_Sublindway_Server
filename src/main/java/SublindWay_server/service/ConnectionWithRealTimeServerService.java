@@ -126,10 +126,10 @@ public class ConnectionWithRealTimeServerService {
             NearbySubwayInfo nearestUpStation = upLineInfos.isEmpty() ? null : upLineInfos.get(0);//널체크
             NearbySubwayInfo nearestDownStation = downLineInfos.isEmpty() ? null : downLineInfos.get(0);//널체크
             if(upDown.equals("상행")){
-                return upHill(nearestUpStation);
+                return nearestUpStation.getBtrainNo();
             }
             else if(upDown.equals("하행")){
-                return downHill(nearestDownStation);
+                return nearestDownStation.getBtrainNo();
             }
             else{
                 return null;
@@ -140,7 +140,7 @@ public class ConnectionWithRealTimeServerService {
         return null;
     }
 
-
+/*
     public String upHill(NearbySubwayInfo nearbySubwayInfo){
        // Optional<TrainInfoEntity> trainInfoEntity=trainInfoRepository.findById(nearbySubwayInfo.getBtrainNo());
         return nearbySubwayInfo.getBtrainNo();
@@ -149,7 +149,7 @@ public class ConnectionWithRealTimeServerService {
     public String downHill(NearbySubwayInfo nearbySubwayInfo){
         return nearbySubwayInfo.getBtrainNo();
     }
-
+*/
     public TrainInfoEntity trackingTrain(String btrainNo){  //열차 추적
         Optional<TrainInfoEntity> trainInfoEntity=trainInfoRepository.findById(btrainNo);
         TrainInfoEntity trainInfo=trainInfoEntity.get();
