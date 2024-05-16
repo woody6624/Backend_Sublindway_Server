@@ -54,7 +54,6 @@ public class OAuthController {
             session.invalidate();
         }
 
-        return "Logged out from Kakao";
         return "로그아웃 성공";
     }
     @GetMapping(value="/get-access-token")
