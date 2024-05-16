@@ -5,7 +5,6 @@ import SublindWay_server.entity.UserEntity;
 import SublindWay_server.repository.UserRepository;
 import SublindWay_server.service.OAuthService;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +13,6 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -29,13 +26,11 @@ public class OAuthController {
     UserRepository userRepository;
     @ResponseBody
     @GetMapping("/kakao")
-    public RedirectView kakaoLoginWeb(@RequestParam String code, HttpServletRequest request) {
-        String accessToken = oAuthService.getKakaoAccessToken(code);
-        UserDTO user = oAuthService.createKakaoUser(accessToken);
-
-        // 세션에 사용자 정보 저장
-        HttpSession session = request.getSession();
-        session.setAttribute("user", user);
+    @Operation(summary = "웹에서 인가 코드 전달", description = "해당 인가 코드로 로그인 구현,유저의 id값 리턴")
+    public RedirectView kakaoLoginWeb(@RequestParam String code) {
+        String gugucaca = oAuthService.getKakaoAccessToken(code);
+        System.out.println(gugucaca);
+        UserDTO user = oAuthService.createKakaoUser(gugucaca);
 
         String userNameEncoded = "";
         try {
@@ -45,34 +40,21 @@ public class OAuthController {
         }
 
         String redirectUrl = "http://localhost:3000/locationMap?kakaoId=" + user.getKakaoId() + "&userName=" + userNameEncoded;
+
         return new RedirectView(redirectUrl);
     }
 
     @GetMapping("/logout")
-    public String logout(HttpServletRequest request) {
+    public RedirectView logout() {
         oAuthService.kakaoLogout();
+        String redirectUrl="http://localhost:3000";
 
-        // 세션 무효화
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
-
-        return "로그아웃 성공";
+        return new RedirectView(redirectUrl);
     }
-
-    @GetMapping("/check-login")
-    public Map<String, Boolean> checkLogin(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        boolean isLoggedIn = session != null && session.getAttribute("user") != null;
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("isLoggedIn", isLoggedIn);
-        return response;
-    }
-
     @GetMapping(value="/get-access-token")
-    public String getAccessToken(String kakaoId) {
-        Optional<UserEntity> userEntity = userRepository.findById(kakaoId);
+    @Operation(summary = "유저 id로 엑세스토큰 get", description = "로그아웃 시 필요")
+    public String getAccessToken(String kakaoId){
+        Optional<UserEntity> userEntity =userRepository.findById(kakaoId);
         return userEntity.get().getAccessToken();
     }
 
