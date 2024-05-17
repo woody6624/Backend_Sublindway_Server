@@ -16,7 +16,7 @@ public class ApiCallScheduler {
         this.getAllSubwayTrainDataService = getAllSubwayTrainDataService;
     }
 
-    @Scheduled(fixedRate = 120000) // 120초마다 실행
+    @Scheduled(fixedRate = 60000) // 120초마다 실행
     public void myScheduledFunction() {
         try {
             getAllSubwayTrainDataService.getAllTrainData();
