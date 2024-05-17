@@ -15,7 +15,7 @@ public class YoloImageDetectionService {
     private final WebClient webClient;
 
     public YoloImageDetectionService(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl("http://13.209.19.20:5000").build();
+        this.webClient = webClientBuilder.baseUrl("http://34.47.98.144:5000").build();
     }
 
     public String detectObjects(String imagePath) {

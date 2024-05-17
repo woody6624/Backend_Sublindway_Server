@@ -26,15 +26,15 @@ public class GetAllSubwayTrainDataService {
     }
     public void getAllTrainData(){ //모든 호선 데이터에 대해서
         trainInfoRepository.deleteAll();//레포지터리에 저장된 데이터를 모두 제거해줍니다.
-        connectionWithRealSubway("1호선");
-        connectionWithRealSubway("2호선");
-        connectionWithRealSubway("3호선");
+      //  connectionWithRealSubway("1호선");
+       // connectionWithRealSubway("2호선");
+      //  connectionWithRealSubway("3호선");
         connectionWithRealSubway("4호선");
-        connectionWithRealSubway("5호선");
-        connectionWithRealSubway("6호선");
-        connectionWithRealSubway("7호선");
-        connectionWithRealSubway("8호선");
-        connectionWithRealSubway("9호선");
+      //  connectionWithRealSubway("5호선");
+      //  connectionWithRealSubway("6호선");
+      //  connectionWithRealSubway("7호선");
+      //  connectionWithRealSubway("8호선");
+      //  connectionWithRealSubway("9호선");
     }
 
     public void connectionWithRealSubway(String requestStation) {
