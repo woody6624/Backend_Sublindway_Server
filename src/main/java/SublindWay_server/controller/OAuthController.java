@@ -39,7 +39,7 @@ public class OAuthController {
             e.printStackTrace();
         }
 
-        String redirectUrl = "http://localhost:3000/locationMap?kakaoId=" + user.getKakaoId() + "&userName=" + userNameEncoded;
+        String redirectUrl = "http://13.209.7.161:80/locationMap?kakaoId=" + user.getKakaoId() + "&userName=" + userNameEncoded;
 
         return new RedirectView(redirectUrl);
     }
@@ -47,7 +47,7 @@ public class OAuthController {
     @GetMapping("/logout")
     public RedirectView logout() {
         oAuthService.kakaoLogout();
-        String redirectUrl="http://localhost:3000/login";
+        String redirectUrl="http://13.209.7.161:80/login";
 
         return new RedirectView(redirectUrl);
     }
