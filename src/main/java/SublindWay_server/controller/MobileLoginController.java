@@ -21,7 +21,4 @@ public class MobileLoginController {
                         @Parameter(description = "유저이름을 주세용", required = true) @RequestParam String userName) {
         return mobileLoginService.getKakaoId(kakaoId,userName);
     }
-
-
-
 }
