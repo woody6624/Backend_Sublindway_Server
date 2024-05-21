@@ -1,7 +1,11 @@
 package SublindWay_server.dto;
 
-import java.time.LocalDateTime;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDateTime;
+@Data
+@RequiredArgsConstructor
 public class SendImagesUuidDTO {
     private String imageUUID;
     private String muckatUserId;
@@ -10,5 +14,5 @@ public class SendImagesUuidDTO {
 
     private LocalDateTime localDateTime;
 
-    private String yoloOrRideOrBoard;
+    private String yoloOrRide;
 }

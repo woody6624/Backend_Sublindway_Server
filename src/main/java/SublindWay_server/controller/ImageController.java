@@ -1,5 +1,6 @@
 package SublindWay_server.controller;
 
+import SublindWay_server.dto.SendImagesUuidDTO;
 import SublindWay_server.dto.SendWebData;
 import SublindWay_server.dto.SubwayDetailDTO;
 import SublindWay_server.entity.ImageEntity;
@@ -31,6 +32,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -174,8 +176,20 @@ public class ImageController {
 
     @GetMapping("/find-image/by-kakaoId")
     @Operation(summary = "카카오id로 이미지 찾기", description = "카카오id로 이미지 찾기")
-    public List<ImageEntity> imageList(@RequestParam("kakaoId") String kakaoId){
-        List<ImageEntity> imageEntities=imageRepository.findByKakaoId(kakaoId);
-        return imageEntities;
+    public List<SendImagesUuidDTO> imageList(@RequestParam("kakaoId") String kakaoId){
+        List<ImageEntity> imageEntities = imageRepository.findByKakaoId(kakaoId);
+        return imageEntities.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    private SendImagesUuidDTO convertToDto(ImageEntity imageEntity) {
+        SendImagesUuidDTO dto = new SendImagesUuidDTO();
+        dto.setImageUUID(imageEntity.getImageUUID());
+        dto.setMuckatUserId(imageEntity.getUserEntity().getMuckatUserId());
+        dto.setUserName(imageEntity.getUserEntity().getUserName());
+        dto.setLocalDateTime(imageEntity.getLocalDateTime());
+        dto.setYoloOrRide(imageEntity.getYoloOrRideOrBoard());
+        return dto;
     }
 }
