@@ -1,4 +1,4 @@
-package SublindWay_server.utility;
+/*package SublindWay_server.utility;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -27,3 +27,4 @@ public class GlobalExceptionHandler {
 
 
 }
+*/
