@@ -4,7 +4,9 @@ import SublindWay_server.dto.SendWebData;
 import SublindWay_server.dto.SubwayDetailDTO;
 import SublindWay_server.entity.ImageEntity;
 import SublindWay_server.entity.TrainInfoEntity;
+import SublindWay_server.entity.UserEntity;
 import SublindWay_server.repository.ImageRepository;
+import SublindWay_server.repository.UserRepository;
 import SublindWay_server.service.*;
 import com.amazonaws.services.s3.AmazonS3;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -21,9 +23,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -54,6 +58,9 @@ public class ImageController {
     OcrAnalyzer ocrAnalyzer;
     @Autowired
     private AmazonS3 amazonS3;
+
+    @Autowired
+    UserRepository userRepository;
     @Autowired
     private SseService sseService; // SSE 서비스 주입
     @PostMapping(value = "/send-subways-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -63,7 +70,7 @@ public class ImageController {
     @ApiResponse(responseCode = "500", description = "Internal server error")
     public SendWebData imageUploadAndCheckSubwayNum(@RequestParam("file") MultipartFile file, @RequestParam("kakaoId") String kakaoId,
                                                     @RequestParam("locationX") double locationX, @RequestParam("locationY") double locationY) throws IOException {
-        String s3Key = s3Uploader.uploadImageFile(file, kakaoId, "");
+        String s3Key = s3Uploader.uploadImageFile(file, kakaoId);
         List<String> answer = ocrAnalyzer.getOcrSubwayNumList(naverOCRService.processOCR(s3Key));
 
         SubwayDetailDTO subwayDetailDTO = subwaySearchServices.getSubwayDetailsByLocation(locationX, locationY);
@@ -71,8 +78,24 @@ public class ImageController {
 
         if (answer.contains("상행")) {
             direction = "상행";
+            ImageEntity imageEntity=new ImageEntity();
+            imageEntity.setImageUUID(s3Key);
+            imageEntity.setLocalDateTime(LocalDate.now().atStartOfDay());
+            Optional<UserEntity> userEntity=userRepository.findById(kakaoId);
+            imageEntity.setUserEntity(userEntity.get());
+            //승차가 true 욜로가 false
+            imageEntity.setYoloOrRideOrBoard("탑승");
+            imageRepository.save(imageEntity);
         } else if (answer.contains("하행")) {
             direction = "하행";
+            ImageEntity imageEntity=new ImageEntity();
+            imageEntity.setImageUUID(s3Key);
+            imageEntity.setLocalDateTime(LocalDate.now().atStartOfDay());
+            Optional<UserEntity> userEntity=userRepository.findById(kakaoId);
+            imageEntity.setUserEntity(userEntity.get());
+            //승차가 true 욜로가 false
+            imageEntity.setYoloOrRideOrBoard("탑승");
+            imageRepository.save(imageEntity);
         } else {
             // Pattern to match numbers in the format "2-3"
             Pattern pattern = Pattern.compile("\\d+-\\d+");
@@ -82,15 +105,31 @@ public class ImageController {
                 if (matcher.find()) {
                     direction = ans;
                     foundMatch = true;
+                    ImageEntity imageEntity=new ImageEntity();
+                    imageEntity.setImageUUID(s3Key);
+                    imageEntity.setLocalDateTime(LocalDate.now().atStartOfDay());
+                    Optional<UserEntity> userEntity=userRepository.findById(kakaoId);
+                    imageEntity.setUserEntity(userEntity.get());
+                    //승차가 true 욜로가 false
+                    imageEntity.setYoloOrRideOrBoard("탑승칸");
+                    imageRepository.save(imageEntity);
                     break;
                 }
             }
-
+            
             // If no "2-3" pattern found, parse YOLO result for direction
             if (!foundMatch) {
                 String yoloResult = yoloImageDetectionService.detectObjects(s3Key);
                 yoloResult = yoloResult.substring(1, yoloResult.length() - 1).replace("\\\"", "\"");
-
+                ImageEntity imageEntity=new ImageEntity();
+                imageEntity.setImageUUID(s3Key);
+                imageEntity.setLocalDateTime(LocalDate.now().atStartOfDay());
+                Optional<UserEntity> userEntity=userRepository.findById(kakaoId);
+                imageEntity.setUserEntity(userEntity.get());
+                //승차가 true 욜로가 false
+                imageEntity.setYoloOrRideOrBoard("욜로");
+                imageRepository.save(imageEntity);
+                
                 // Create ObjectMapper instance
                 ObjectMapper mapper = new ObjectMapper();
 

@@ -39,7 +39,7 @@ public class S3Uploader {
         this.userRepository = userRepository;
     }
 
-    public String uploadImageFile(MultipartFile multipartFile,String kakaoId,String dirName) throws IOException {
+    public String uploadImageFile(MultipartFile multipartFile,String kakaoId) throws IOException {
         // 파일 이름에서 공백을 제거한 새로운 파일 이름 생성
         String originalFileName = multipartFile.getOriginalFilename();
 
@@ -51,12 +51,6 @@ public class S3Uploader {
         log.info("fileName: " + uniqueFileName);
         File uploadFile = convert(multipartFile,fileName);
         //이미지 저장 부분
-            ImageEntity imageEntity=new ImageEntity();
-            imageEntity.setImageUUID(uuid);
-            imageEntity.setLocalDateTime(LocalDate.now().atStartOfDay());
-            Optional<UserEntity> userEntity=userRepository.findById(kakaoId);
-            imageEntity.setUserEntity(userEntity.get());
-            imageRepository.save(imageEntity);
             String uploadImageUrl = putS3(uploadFile, fileName);
 
         return uploadImageUrl;

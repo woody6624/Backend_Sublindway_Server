@@ -31,4 +31,7 @@ public class ImageEntity {
     @Column(name="timestamp")
     private LocalDateTime localDateTime;
 
+    //탑승 or 욜로  or 탑승칸
+    @Column(name="yolo_ride_board")
+    private String yoloOrRideOrBoard;
 }
