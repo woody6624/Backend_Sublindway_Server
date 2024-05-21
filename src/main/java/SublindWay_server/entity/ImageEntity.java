@@ -4,10 +4,12 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "images")
@@ -25,8 +27,8 @@ public class ImageEntity {
     @JoinColumn(name = "kakao_id")
     private UserEntity userEntity;
 
+    @CreationTimestamp
     @Column(name="timestamp")
-    private LocalDate localDateTime;
-
+    private LocalDateTime localDateTime;
 
 }

@@ -133,5 +133,10 @@ public class ImageController {
         return sseService.subscribe(userId); // SSE 구독
     }
 
-
+    @GetMapping("/find-image/by-kakaoId")
+    @Operation(summary = "카카오id로 이미지 찾기", description = "카카오id로 이미지 찾기")
+    public List<ImageEntity> imageList(@RequestParam("kakaoId") String kakaoId){
+        List<ImageEntity> imageEntities=imageRepository.findByKakaoId(kakaoId);
+        return imageEntities;
+    }
 }

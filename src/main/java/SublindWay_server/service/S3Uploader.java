@@ -53,7 +53,7 @@ public class S3Uploader {
         //이미지 저장 부분
             ImageEntity imageEntity=new ImageEntity();
             imageEntity.setImageUUID(uuid);
-            imageEntity.setLocalDateTime(LocalDate.now());
+            imageEntity.setLocalDateTime(LocalDate.now().atStartOfDay());
             Optional<UserEntity> userEntity=userRepository.findById(kakaoId);
             imageEntity.setUserEntity(userEntity.get());
             imageRepository.save(imageEntity);
