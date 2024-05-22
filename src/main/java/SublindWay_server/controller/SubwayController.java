@@ -31,6 +31,24 @@ public class SubwayController {
 
         // SendXyLocation 객체를 SendWebData로 래핑
         SendWebData sendWebData = new SendWebData("", "", locationX, locationY);
+       // sseService.updateLastKnownLocation(userId, sendWebData); // 위치 데이터 업데이트
+       // sseService.sendEventToUser(userId, sendWebData); // 클라이언트에게 SSE 이벤트 전송
+
+        return subwayDetail;
+    }
+
+    @GetMapping("/subway-name-by-location/final-station")
+    @Operation(summary = "하차 시 처리", description = "본인의 xy좌표와 사용자 ID를 통하여 하차 할 시 근처 지하철 역의 이름을 얻고 웹으로 " +
+            "데이터를 전송해줍니다.")
+    public SubwayDetailDTO findSubwayByEuclidFinal(
+            @Parameter(description = "사용자 ID", required = true) @RequestParam String userId,
+            @Parameter(description = "x 좌표(소수점 6자리)", required = true) @RequestParam double locationX,
+            @Parameter(description = "y 좌표(소수점 6자리)", required = true) @RequestParam double locationY) {
+
+        SubwayDetailDTO subwayDetail = subwaySearchService.getSubwayDetailsByLocation(locationX, locationY);
+
+        // SendXyLocation 객체를 SendWebData로 래핑
+        SendWebData sendWebData = new SendWebData("", "", locationX, locationY);
         sseService.updateLastKnownLocation(userId, sendWebData); // 위치 데이터 업데이트
         sseService.sendEventToUser(userId, sendWebData); // 클라이언트에게 SSE 이벤트 전송
 

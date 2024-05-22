@@ -66,7 +66,7 @@ public class ImageController {
     @Autowired
     private SseService sseService; // SSE 서비스 주입
     @PostMapping(value = "/send-subways-image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(summary = "이미지 넣기", description = "이미지 분석 By Naver Ocr")
+    @Operation(summary = "이미지 넣기-승차시 처리", description = "승차 시 이미지와 본인의 kakaoId,x,y좌표를 보냅니다")
     @ApiResponse(responseCode = "200", description = "Successful Operation", content = @Content(schema = @Schema(implementation = List.class)))
     @ApiResponse(responseCode = "400", description = "Invalid input")
     @ApiResponse(responseCode = "500", description = "Internal server error")
