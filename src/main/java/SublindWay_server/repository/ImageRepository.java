@@ -12,4 +12,7 @@ public interface ImageRepository extends JpaRepository<ImageEntity,String> {
     @Query("SELECT u FROM ImageEntity u WHERE u.userEntity.muckatUserId = :kakaoId")
     List<ImageEntity> findByKakaoId(String kakaoId);
 
+    @Query("SELECT u FROM ImageEntity u WHERE u.userEntity.muckatUserId = :kakaoId AND u.yoloOrRideOrBoard = '탑승'")
+    List<ImageEntity> findByKakaoIdGetRideImage(String kakaoId);
+
 }

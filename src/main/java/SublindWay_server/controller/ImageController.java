@@ -90,7 +90,8 @@ public class ImageController {
     @ApiResponse(responseCode = "200", description = "UUID Found", content = @Content(schema = @Schema(implementation = String.class)))
     @ApiResponse(responseCode = "404", description = "Image not found")
     public String getImageUUID(@RequestParam("kakaoId") String kakaoId) throws IOException {
-        List<ImageEntity> imageEntities = imageRepository.findByKakaoId(kakaoId);
+        List<ImageEntity> imageEntities = imageRepository.findByKakaoIdGetRideImage(kakaoId);
+
         return imageEntities.get(0).getImageUUID();
     }
     @GetMapping("/stream/{userId}")
