@@ -116,5 +116,4 @@ public class ImageController {
         dto.setYoloOrRide(imageEntity.getYoloOrRideOrBoard());
         return dto;
     }
-
 }

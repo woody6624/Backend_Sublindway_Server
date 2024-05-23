@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class SendImagesUuidDTO {
     private String imageUUID;
+
     private String muckatUserId;
 
     private String userName;

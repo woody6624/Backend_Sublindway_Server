@@ -40,7 +40,6 @@ public class OAuthController {
         }
 
         String redirectUrl = "http://13.209.7.161:80/locationMap?kakaoId=" + user.getKakaoId() + "&userName=" + userNameEncoded;
-
         return new RedirectView(redirectUrl);
     }
 

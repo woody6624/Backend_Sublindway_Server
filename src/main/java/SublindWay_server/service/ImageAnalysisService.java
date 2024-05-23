@@ -12,6 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -91,10 +94,23 @@ public class ImageAnalysisService {
     private void saveImageEntity(String s3Key, String kakaoId, String status) {
         ImageEntity imageEntity = new ImageEntity();
         imageEntity.setImageUUID(s3Key);
-        imageEntity.setLocalDateTime(LocalDate.now().atStartOfDay());
+        imageEntity.setLocalDateTime(setSeoulStartOfDay());
         Optional<UserEntity> userEntity = userRepository.findById(kakaoId);
         imageEntity.setUserEntity(userEntity.get());
         imageEntity.setYoloOrRideOrBoard(status);
         imageRepository.save(imageEntity);
+    }
+    public LocalDateTime setSeoulStartOfDay() {
+        LocalDateTime localStartOfDay = LocalDate.now().atStartOfDay();
+
+        ZoneId seoulZoneId = ZoneId.of("Asia/Seoul");
+
+        ZonedDateTime systemZonedStartOfDay = localStartOfDay.atZone(ZoneId.systemDefault());
+
+        ZonedDateTime seoulZonedStartOfDay = systemZonedStartOfDay.withZoneSameInstant(seoulZoneId);
+
+        LocalDateTime seoulStartOfDay = seoulZonedStartOfDay.toLocalDateTime();
+
+        return seoulStartOfDay;
     }
 }

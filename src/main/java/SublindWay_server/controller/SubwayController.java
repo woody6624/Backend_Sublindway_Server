@@ -33,7 +33,6 @@ public class SubwayController {
         SendWebData sendWebData = new SendWebData("", "", locationX, locationY);
        // sseService.updateLastKnownLocation(userId, sendWebData); // 위치 데이터 업데이트
        // sseService.sendEventToUser(userId, sendWebData); // 클라이언트에게 SSE 이벤트 전송
-
         return subwayDetail;
     }
 
