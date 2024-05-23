@@ -60,7 +60,8 @@ public class ImageController {
     OcrAnalyzer ocrAnalyzer;
     @Autowired
     private AmazonS3 amazonS3;
-
+    @Autowired
+    private ImageAnalysisService imageAnalysisService;
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -73,94 +74,17 @@ public class ImageController {
     public SendWebData imageUploadAndCheckSubwayNum(@RequestParam("file") MultipartFile file, @RequestParam("kakaoId") String kakaoId,
                                                     @RequestParam("locationX") double locationX, @RequestParam("locationY") double locationY) throws IOException {
         String s3Key = s3Uploader.uploadImageFile(file, kakaoId);
-        List<String> answer = ocrAnalyzer.getOcrSubwayNumList(naverOCRService.processOCR(s3Key));
+        String direction = imageAnalysisService.analyzeImageAndDetermineDirection(s3Key, kakaoId, locationX, locationY);
 
         SubwayDetailDTO subwayDetailDTO = subwaySearchServices.getSubwayDetailsByLocation(locationX, locationY);
-        String direction = "";
-
-        if (answer.contains("상행")) {
-            direction = "상행";
-            ImageEntity imageEntity=new ImageEntity();
-            imageEntity.setImageUUID(s3Key);
-            imageEntity.setLocalDateTime(LocalDate.now().atStartOfDay());
-            Optional<UserEntity> userEntity=userRepository.findById(kakaoId);
-            imageEntity.setUserEntity(userEntity.get());
-            //승차가 true 욜로가 false
-            imageEntity.setYoloOrRideOrBoard("탑승");
-            imageRepository.save(imageEntity);
-        } else if (answer.contains("하행")) {
-            direction = "하행";
-            ImageEntity imageEntity=new ImageEntity();
-            imageEntity.setImageUUID(s3Key);
-            imageEntity.setLocalDateTime(LocalDate.now().atStartOfDay());
-            Optional<UserEntity> userEntity=userRepository.findById(kakaoId);
-            imageEntity.setUserEntity(userEntity.get());
-            //승차가 true 욜로가 false
-            imageEntity.setYoloOrRideOrBoard("탑승");
-            imageRepository.save(imageEntity);
-        } else {
-            // Pattern to match numbers in the format "2-3"
-            Pattern pattern = Pattern.compile("\\d+-\\d+");
-            boolean foundMatch = false;
-            for (String ans : answer) {
-                Matcher matcher = pattern.matcher(ans);
-                if (matcher.find()) {
-                    direction = ans;
-                    foundMatch = true;
-                    ImageEntity imageEntity=new ImageEntity();
-                    imageEntity.setImageUUID(s3Key);
-                    imageEntity.setLocalDateTime(LocalDate.now().atStartOfDay());
-                    Optional<UserEntity> userEntity=userRepository.findById(kakaoId);
-                    imageEntity.setUserEntity(userEntity.get());
-                    //승차가 true 욜로가 false
-                    imageEntity.setYoloOrRideOrBoard("탑승칸");
-                    imageRepository.save(imageEntity);
-                    break;
-                }
-            }
-            
-            // If no "2-3" pattern found, parse YOLO result for direction
-            if (!foundMatch) {
-                String yoloResult = yoloImageDetectionService.detectObjects(s3Key);
-                yoloResult = yoloResult.substring(1, yoloResult.length() - 1).replace("\\\"", "\"");
-                ImageEntity imageEntity=new ImageEntity();
-                imageEntity.setImageUUID(s3Key);
-                imageEntity.setLocalDateTime(LocalDate.now().atStartOfDay());
-                Optional<UserEntity> userEntity=userRepository.findById(kakaoId);
-                imageEntity.setUserEntity(userEntity.get());
-                //승차가 true 욜로가 false
-                imageEntity.setYoloOrRideOrBoard("욜로");
-                imageRepository.save(imageEntity);
-                
-                // Create ObjectMapper instance
-                ObjectMapper mapper = new ObjectMapper();
-
-                // Parse the JSON array
-                JsonNode arrayNode = mapper.readTree(yoloResult);
-
-                // List to store the names
-                List<String> names = new ArrayList<>();
-
-                // Iterate over the array elements
-                for (JsonNode node : arrayNode) {
-                    String name = node.get("name").asText();
-                    names.add(name);
-                }
-
-                // Join the names into a single string (or any other format you need)
-                direction = String.join(", ", names);
-            }
-        }
-
         String trainNum = connectionWithRealTimeServerService.connectionWithRealSubway(subwayDetailDTO.getSubwayName(), direction);
 
         SendWebData sendWebData = new SendWebData(trainNum, direction, locationX, locationY);
-        sseService.updateLastKnownLocation(kakaoId, sendWebData); // 도착지 데이터 업데이트
-        sseService.sendEventToUser(kakaoId, sendWebData); // 클라이언트에게 SSE 이벤트 전송
+        sseService.updateLastKnownLocation(kakaoId, sendWebData);
+        sseService.sendEventToUser(kakaoId, sendWebData);
         s3Uploader.removeNewFile(new File(s3Key + ".jpg"));
         return sendWebData;
     }
-
     @GetMapping(value = "/find-image-uuid")
     @Operation(summary = "이미지 uuid찾기", description = "uuid찾기")
     @ApiResponse(responseCode = "200", description = "UUID Found", content = @Content(schema = @Schema(implementation = String.class)))
@@ -182,7 +106,6 @@ public class ImageController {
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
-
     private SendImagesUuidDTO convertToDto(ImageEntity imageEntity) {
         SendImagesUuidDTO dto = new SendImagesUuidDTO();
         dto.setImageUUID(imageEntity.getImageUUID());
@@ -192,4 +115,5 @@ public class ImageController {
         dto.setYoloOrRide(imageEntity.getYoloOrRideOrBoard());
         return dto;
     }
+
 }
