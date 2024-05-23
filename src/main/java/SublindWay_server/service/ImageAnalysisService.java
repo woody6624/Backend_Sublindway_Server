@@ -100,17 +100,17 @@ public class ImageAnalysisService {
         imageEntity.setYoloOrRideOrBoard(status);
         imageRepository.save(imageEntity);
     }
-    public LocalDateTime setSeoulStartOfDay() {
-        LocalDateTime localStartOfDay = LocalDate.now().atStartOfDay();
+        public LocalDateTime setSeoulStartOfDay() {
+            LocalDateTime localStartOfDay = LocalDate.now().atStartOfDay();
 
-        ZoneId seoulZoneId = ZoneId.of("Asia/Seoul");
+            ZoneId seoulZoneId = ZoneId.of("Asia/Seoul");
 
-        ZonedDateTime systemZonedStartOfDay = localStartOfDay.atZone(ZoneId.systemDefault());
+            ZonedDateTime systemZonedStartOfDay = localStartOfDay.atZone(ZoneId.systemDefault());
 
-        ZonedDateTime seoulZonedStartOfDay = systemZonedStartOfDay.withZoneSameInstant(seoulZoneId);
+            ZonedDateTime seoulZonedStartOfDay = systemZonedStartOfDay.withZoneSameInstant(seoulZoneId);
 
-        LocalDateTime seoulStartOfDay = seoulZonedStartOfDay.toLocalDateTime();
+            LocalDateTime seoulStartOfDay = seoulZonedStartOfDay.toLocalDateTime();
 
-        return seoulStartOfDay;
+            return seoulStartOfDay;
+        }
     }
-}
