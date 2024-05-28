@@ -15,9 +15,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.File;
@@ -43,7 +45,8 @@ public class ImageController {
     private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
     private final Map<String, SendWebData> lastKnownLocations = new ConcurrentHashMap<>();
     private final Path rootLocation = Paths.get("images");
-
+    @Autowired
+    private InMemoryRateLimitingService rateLimitingService;
     @Autowired
     SubwaySearchService subwaySearchServices;
     @Autowired
@@ -73,6 +76,10 @@ public class ImageController {
     @ApiResponse(responseCode = "500", description = "Internal server error")
     public SendWebData imageUploadAndCheckSubwayNum(@RequestParam("file") MultipartFile file, @RequestParam("kakaoId") String kakaoId,
                                                     @RequestParam("locationX") double locationX, @RequestParam("locationY") double locationY) throws IOException {
+        if (rateLimitingService.isRateLimitExceeded(kakaoId)) {
+            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Rate limit exceeded. Please try again later.");
+        }
+
         String s3Key = s3Uploader.uploadImageFile(file, kakaoId);
         String direction = imageAnalysisService.analyzeImageAndDetermineDirection(s3Key, kakaoId, locationX, locationY);
 
@@ -85,6 +92,7 @@ public class ImageController {
         s3Uploader.removeNewFile(new File(s3Key + ".jpg"));
         return sendWebData;
     }
+
     @GetMapping(value = "/find-image-uuid")
     @Operation(summary = "이미지 uuid찾기", description = "uuid찾기")
     @ApiResponse(responseCode = "200", description = "UUID Found", content = @Content(schema = @Schema(implementation = String.class)))
@@ -94,6 +102,7 @@ public class ImageController {
 
         return imageEntities.get(0).getImageUUID();
     }
+
     @GetMapping("/stream/{userId}")
     public SseEmitter subscribe(@PathVariable String userId) {
         return sseService.subscribe(userId); // SSE 구독
@@ -107,6 +116,7 @@ public class ImageController {
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
+
     private SendImagesUuidDTO convertToDto(ImageEntity imageEntity) {
         SendImagesUuidDTO dto = new SendImagesUuidDTO();
         dto.setImageUUID(imageEntity.getImageUUID());
