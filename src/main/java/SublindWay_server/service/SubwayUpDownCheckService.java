@@ -37,10 +37,11 @@ public class SubwayUpDownCheckService {
         switch (line) {
             case "01호선":
             case "04호선":
-                return (start < end) ? "하행" : "상행";
+                return (start < end) ? "상행" : "하행";
             case "03호선":
             case "05호선":
             case "06호선":
+                return (start < end) ? "상행" : "하행";
             case "07호선":
             case "08호선":
             case "09호선":
