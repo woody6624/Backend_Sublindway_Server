@@ -31,7 +31,7 @@ public class GetAllSubwayTrainDataService {
       //  connectionWithRealSubway("3호선");
         connectionWithRealSubway("4호선");
       //  connectionWithRealSubway("5호선");
-      //  connectionWithRealSubway("6호선");
+        connectionWithRealSubway("6호선");
       //  connectionWithRealSubway("7호선");
       //  connectionWithRealSubway("8호선");
       //  connectionWithRealSubway("9호선");
