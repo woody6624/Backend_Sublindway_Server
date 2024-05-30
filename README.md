@@ -1,3 +1,14 @@
+
+  
+  
+  # 백엔드 구조도👨
+  
+  <img width="400" alt="image" src="https://github.com/woody6624/Backend_Sublindway_Server/assets/103871252/02f699d6-ef51-4360-87a4-e3e1825d5db3">
+
+  
+  
+  
+  
   # 백엔드 주요 사용 기술 목록👦
   
   ## 개발 환경
