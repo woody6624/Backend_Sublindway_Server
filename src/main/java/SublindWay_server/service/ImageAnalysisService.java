@@ -41,7 +41,6 @@ public class ImageAnalysisService {
 
     private final ReentrantLock lock = new ReentrantLock();
 
-    @Transactional
     public String analyzeImageAndDetermineDirection(String s3Key, String kakaoId, double locationX, double locationY) throws IOException {
         lock.lock();
         try {
