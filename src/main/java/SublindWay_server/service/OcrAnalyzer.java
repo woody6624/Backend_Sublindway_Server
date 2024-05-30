@@ -46,7 +46,7 @@ public class OcrAnalyzer {
         }
         int start = subwayNums.get(0);
         int end = subwayNums.get(1);
-
+        System.out.println("시작"+start+"끝"+end);
         String direction = subwayService.findDirection(start, end);
         answerList.add(direction);
 
