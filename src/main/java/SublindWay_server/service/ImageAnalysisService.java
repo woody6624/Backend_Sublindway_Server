@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -46,7 +45,12 @@ public class ImageAnalysisService {
     public String analyzeImageAndDetermineDirection(String s3Key, String kakaoId, double locationX, double locationY) throws IOException {
         lock.lock();
         try {
-            List<String> answer = ocrAnalyzer.getOcrSubwayNumList(naverOCRService.processOCR(s3Key));
+            String ocrResult = naverOCRService.processOCR(s3Key);
+            System.out.println("OCR Result: " + ocrResult);
+
+            List<String> answer = ocrAnalyzer.getOcrSubwayNumList(ocrResult);
+            System.out.println("OCR Analysis Result: " + answer);
+
             String direction = "";
 
             if (answer.contains("상행")) {
@@ -56,7 +60,7 @@ public class ImageAnalysisService {
                 direction = "하행";
                 saveImageEntity(s3Key, kakaoId, "탑승");
             } else {
-                //패턴 정규식 지정
+                // 패턴 정규식 지정
                 Pattern pattern = Pattern.compile("\\d+-\\d+");
                 boolean foundMatch = false;
                 for (String ans : answer) {
@@ -85,6 +89,7 @@ public class ImageAnalysisService {
                     direction = String.join(", ", names);
                 }
             }
+            System.out.println("Determined Direction: " + direction);
             return direction;
         } finally {
             lock.unlock();
@@ -100,17 +105,18 @@ public class ImageAnalysisService {
         imageEntity.setYoloOrRideOrBoard(status);
         imageRepository.save(imageEntity);
     }
-        public LocalDateTime setSeoulStartOfDay() {
-            LocalDateTime localStartOfDay = LocalDate.now().atStartOfDay();
 
-            ZoneId seoulZoneId = ZoneId.of("Asia/Seoul");
+    public LocalDateTime setSeoulStartOfDay() {
+        LocalDateTime localStartOfDay = LocalDate.now().atStartOfDay();
 
-            ZonedDateTime systemZonedStartOfDay = localStartOfDay.atZone(ZoneId.systemDefault());
+        ZoneId seoulZoneId = ZoneId.of("Asia/Seoul");
 
-            ZonedDateTime seoulZonedStartOfDay = systemZonedStartOfDay.withZoneSameInstant(seoulZoneId);
+        ZonedDateTime systemZonedStartOfDay = localStartOfDay.atZone(ZoneId.systemDefault());
 
-            LocalDateTime seoulStartOfDay = seoulZonedStartOfDay.toLocalDateTime();
+        ZonedDateTime seoulZonedStartOfDay = systemZonedStartOfDay.withZoneSameInstant(seoulZoneId);
 
-            return seoulStartOfDay;
-        }
+        LocalDateTime seoulStartOfDay = seoulZonedStartOfDay.toLocalDateTime();
+
+        return seoulStartOfDay;
     }
+}
