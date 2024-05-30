@@ -1,4 +1,4 @@
-/*package SublindWay_server.utility;
+package SublindWay_server.utility;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -21,9 +21,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> globalException(Exception e){
-        return new ResponseEntity<>("서버 에러", HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>("전역 서버 에러", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 
 
-}*/
+}
