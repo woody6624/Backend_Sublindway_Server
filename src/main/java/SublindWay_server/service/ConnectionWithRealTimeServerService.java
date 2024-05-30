@@ -126,9 +126,12 @@ public class ConnectionWithRealTimeServerService {
             NearbySubwayInfo nearestUpStation = upLineInfos.isEmpty() ? null : upLineInfos.get(0);//널체크
             NearbySubwayInfo nearestDownStation = downLineInfos.isEmpty() ? null : downLineInfos.get(0);//널체크
             if(upDown.equals("상행")){
+                System.out.println("상행 출력");
                 return nearestUpStation.getBtrainNo();
             }
             else if(upDown.equals("하행")){
+                System.out.println("하행 출력");
+
                 return nearestDownStation.getBtrainNo();
             }
             else{

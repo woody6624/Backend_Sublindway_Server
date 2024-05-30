@@ -24,10 +24,8 @@ public class SubwayUpDownCheckService {
                 return "출발역과 도착역이 다른 호선에 있습니다.";
             }
 
-            int startNumber = startStation.getSubwayNum();
-            int endNumber = endStation.getSubwayNum();
 
-            return getDirection(line, startNumber, endNumber);
+            return getDirection(line, startId, endId);
         } else {
             return "출발역 또는 도착역을 찾을 수 없습니다.";
         }
