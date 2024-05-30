@@ -151,6 +151,7 @@ public class ConnectionWithRealTimeServerService {
     }
 */
     public TrainInfoEntity trackingTrain(String btrainNo){  //열차 추적
+        System.out.println(btrainNo);
         Optional<TrainInfoEntity> trainInfoEntity=trainInfoRepository.findById(btrainNo);
         TrainInfoEntity trainInfo=trainInfoEntity.get();
         return trainInfo;
