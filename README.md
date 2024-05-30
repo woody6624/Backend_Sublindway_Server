@@ -1,5 +1,3 @@
-# <details>
-  <summary>프로젝트 소개</summary>
   ## 개발 환경
   - ![Windows](https://img.shields.io/badge/OS-Windows-blue)
 
@@ -30,4 +28,3 @@
   ## CI/CD
   - ![Jenkins](https://img.shields.io/badge/CI%2FCD-Jenkins-orange)
 
-</details>
