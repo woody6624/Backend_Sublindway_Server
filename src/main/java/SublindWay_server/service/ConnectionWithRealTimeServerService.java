@@ -155,4 +155,35 @@ public class ConnectionWithRealTimeServerService {
         TrainInfoEntity trainInfo=trainInfoEntity.get();
         return trainInfo;
     }
+
+    public String getNextStation(String upOrDown,String stationName,String subwayLine){  //열차 추적
+        if(subwayLine.equals("04호선")){//4호선 하행시 +1 상행시 -1
+            SubwayDetailEntity subwayDetailEntity=subwayDetailRepository.findSubwayBySubwayName(stationName,subwayLine);
+
+            if(upOrDown.equals("상행")){
+                Optional<SubwayDetailEntity> returnEntity= subwayDetailRepository.findById(subwayDetailEntity.getSubwayNum()-1);
+                return returnEntity.get().getSubwayName();
+            }
+            else{
+                Optional<SubwayDetailEntity> returnEntity= subwayDetailRepository.findById(subwayDetailEntity.getSubwayNum()+1);
+                return returnEntity.get().getSubwayName();
+            }
+        }
+        else if(subwayLine.equals("06호선")){//6호선 하행시 -1 상행시 +1
+            SubwayDetailEntity subwayDetailEntity=subwayDetailRepository.findSubwayBySubwayName(stationName,subwayLine);
+
+            if(upOrDown.equals("상행")){
+                Optional<SubwayDetailEntity> returnEntity= subwayDetailRepository.findById(subwayDetailEntity.getSubwayNum()+1);
+                return returnEntity.get().getSubwayName();
+            }
+            else{
+                Optional<SubwayDetailEntity> returnEntity= subwayDetailRepository.findById(subwayDetailEntity.getSubwayNum()-1);
+                return returnEntity.get().getSubwayName();
+            }
+        }
+        else{
+            return null;
+        }
+    }
+
 }

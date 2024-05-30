@@ -27,6 +27,13 @@ public class LiveServerConnectionController {
       return connectionWithRealTimeServerService.trackingTrain(trainNumber);
   }
 
-
+  @GetMapping("/next-station-name")
+  @Operation(summary = "다음 역 이름 받아오는곳", description = "여깄어요")
+  public String getNextStationName(@Parameter(description = "상행  혹은  하행", required = true) @RequestParam String upOrDown,
+                                   @Parameter(description = "xx역이면 xx만", required = true)
+  @RequestParam String stationName,@Parameter(description = "4호선이면 04호선 6호선이면 06호선", required = true)
+  @RequestParam String stationLine){
+    return connectionWithRealTimeServerService.getNextStation(upOrDown,stationName,stationLine);
+  }
 
 }
