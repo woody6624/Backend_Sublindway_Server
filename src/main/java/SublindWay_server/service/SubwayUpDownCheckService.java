@@ -22,7 +22,8 @@ public class SubwayUpDownCheckService {
             String line = startStation.getSubwayLine();
             if (!line.equals(endStation.getSubwayLine())) {
                 return "출발역과 도착역이 다른 호선에 있습니다.";
-            }
+            }   
+            System.out.println(startId+"야호"+endId);
 
 
             return getDirection(line, startId, endId);
