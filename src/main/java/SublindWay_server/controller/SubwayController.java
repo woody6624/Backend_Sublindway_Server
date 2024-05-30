@@ -45,7 +45,6 @@ public class SubwayController {
             @Parameter(description = "y 좌표(소수점 6자리)", required = true) @RequestParam double locationY) {
 
         SubwayDetailDTO subwayDetail = subwaySearchService.getSubwayDetailsByLocation(locationX, locationY);
-
         // SendXyLocation 객체를 SendWebData로 래핑
         SendWebData sendWebData = new SendWebData("", "", locationX, locationY);
         sseService.updateLastKnownLocation(userId, sendWebData); // 위치 데이터 업데이트

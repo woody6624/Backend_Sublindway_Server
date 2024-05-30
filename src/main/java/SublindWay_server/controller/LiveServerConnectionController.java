@@ -26,4 +26,7 @@ public class LiveServerConnectionController {
   public TrainInfoEntity trackingTrain(@Parameter(description = "열차번호", required = true) @RequestParam String trainNumber) {
       return connectionWithRealTimeServerService.trackingTrain(trainNumber);
   }
+
+
+
 }
