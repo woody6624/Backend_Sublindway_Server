@@ -3,7 +3,7 @@
   
   # 백엔드 구조도👨
   
-  <img width="400" alt="image" src="https://github.com/woody6624/Backend_Sublindway_Server/assets/103871252/02f699d6-ef51-4360-87a4-e3e1825d5db3">
+  <img width="800" alt="image" src="https://github.com/woody6624/Backend_Sublindway_Server/assets/103871252/02f699d6-ef51-4360-87a4-e3e1825d5db3">
 
   
   
