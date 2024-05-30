@@ -5,7 +5,6 @@ import SublindWay_server.entity.UserEntity;
 import SublindWay_server.repository.UserRepository;
 import SublindWay_server.service.OAuthService;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

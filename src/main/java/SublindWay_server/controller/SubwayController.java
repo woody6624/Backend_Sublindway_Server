@@ -2,13 +2,15 @@ package SublindWay_server.controller;
 
 import SublindWay_server.dto.SendWebData;
 import SublindWay_server.dto.SubwayDetailDTO;
-import SublindWay_server.dto.SendXyLocation;
-import SublindWay_server.service.SubwaySearchService;
 import SublindWay_server.service.SseService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import SublindWay_server.service.SubwaySearchService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @RestController

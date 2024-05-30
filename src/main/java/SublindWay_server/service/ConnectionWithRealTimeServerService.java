@@ -34,7 +34,7 @@ public class ConnectionWithRealTimeServerService {
     }
 
     public String connectionWithRealSubway(String requestStation,String upDown) {
-        StringBuilder tempUrl=new StringBuilder("http://swopenAPI.seoul.go.kr/api/subway/7471724567776f6f37306753556564/json/realtimeStationArrival/0/20/");
+        StringBuilder tempUrl=new StringBuilder("http://swopenAPI.seoul.go.kr/api/subway/654c744147776f6f37385153517772/json/realtimeStationArrival/0/20/");
         tempUrl.append(requestStation);
         String url=tempUrl.toString();
         WebClient webClient = WebClient.create();

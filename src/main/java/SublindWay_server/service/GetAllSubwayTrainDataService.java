@@ -1,5 +1,5 @@
 package SublindWay_server.service;
-import SublindWay_server.entity.SubwayDetailEntity;
+
 import SublindWay_server.entity.TrainInfoEntity;
 import SublindWay_server.repository.SubwayDetailRepository;
 import SublindWay_server.repository.TrainInfoRepository;
@@ -38,7 +38,7 @@ public class GetAllSubwayTrainDataService {
     }
 
     public void connectionWithRealSubway(String requestStation) {
-        StringBuilder tempUrl=new StringBuilder("http://swopenapi.seoul.go.kr/api/subway/7471724567776f6f37306753556564/json/realtimePosition/0/100/");
+        StringBuilder tempUrl=new StringBuilder("http://swopenapi.seoul.go.kr/api/subway/654c744147776f6f37385153517772/json/realtimePosition/0/100/");
         tempUrl.append(requestStation);
         String url=tempUrl.toString();
         System.out.println("정상실행");

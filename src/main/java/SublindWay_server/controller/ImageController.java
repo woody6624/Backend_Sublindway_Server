@@ -4,15 +4,13 @@ import SublindWay_server.dto.SendImagesUuidDTO;
 import SublindWay_server.dto.SendWebData;
 import SublindWay_server.dto.SubwayDetailDTO;
 import SublindWay_server.entity.ImageEntity;
-import SublindWay_server.entity.TrainInfoEntity;
-import SublindWay_server.entity.UserEntity;
 import SublindWay_server.repository.ImageRepository;
 import SublindWay_server.repository.UserRepository;
 import SublindWay_server.service.*;
 import com.amazonaws.services.s3.AmazonS3;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,18 +24,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 
 @RestController
 public class ImageController {
