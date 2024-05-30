@@ -20,6 +20,7 @@ public class OcrAnalyzer {
         JsonNode imageArrJsonData = getAllJsonData.get("images");
         List<Integer> subwayNums = new ArrayList<>();
         List<String> answerList = new ArrayList<>();
+        subwayNums.clear();
 
         for (JsonNode imageData : imageArrJsonData) {
             JsonNode fieldsDatas = imageData.get("fields");
@@ -43,7 +44,6 @@ public class OcrAnalyzer {
             answerList.add("최소한 2개 이상의 숫자를 찍어야 합니다.");
             return answerList;
         }
-
         int start = subwayNums.get(0);
         int end = subwayNums.get(1);
 
