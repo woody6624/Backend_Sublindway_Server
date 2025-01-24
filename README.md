@@ -1,5 +1,4 @@
-![Image](https://github.com/user-attachments/assets/0a0a5b11-f19c-45c2-9ae1-e39b234ec94e)
-<br>  
+
 
   # 백엔드 구조도👨
   
